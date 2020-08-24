@@ -31,16 +31,18 @@
     </distributionManagement>
 
     <modules>
-        <!--公共服务,定义DTO、工具类等-->
+        <!--公共组件-->
         <module>galaxy-common</module>
-        <!--Eureka注册中心-->
+        <!--注册中心-->
         <module>galaxy-eureka-server</module>
-        <!--统一查询网关-->
+        <!--查询网关-->
         <module>galaxy-gateway</module>
-        <!--数据查询引擎-->
+        <!--查询引擎-->
         <module>galaxy-data-engine</module>
         <!--认证中心-->
         <module>galaxy-auth-center</module>
+        <!--监控服务-->
+        <module>galaxy-admin-server</module>
     </modules>
 
     <properties>
