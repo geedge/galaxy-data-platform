@@ -49,13 +49,13 @@ public class ArangoCursorResult {
             private double initializing;
             private double parsing;
             @SerializedName("optimizing ast")
-            private double _$OptimizingAst41; // FIXME check this code
+            private double _$OptimizingAst41;
             @SerializedName("loading collections")
-            private double _$LoadingCollections53; // FIXME check this code
+            private double _$LoadingCollections53;
             @SerializedName("instantiating plan")
-            private double _$InstantiatingPlan79; // FIXME check this code
+            private double _$InstantiatingPlan79;
             @SerializedName("optimizing plan")
-            private double _$OptimizingPlan284; // FIXME check this code
+            private double _$OptimizingPlan284;
             private double executing;
             private double finalizing;
 

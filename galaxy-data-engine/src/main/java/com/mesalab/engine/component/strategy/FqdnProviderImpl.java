@@ -130,7 +130,7 @@ public class FqdnProviderImpl implements QueryProvider {
     /**
      * @return java.lang.Object
      * @Author zhq
-     * @Description //TODO 返回需要的结果集
+     * @Description
      * @Date 2020\7\15 0015
      * @Param [IpLearningPath]
      **/
