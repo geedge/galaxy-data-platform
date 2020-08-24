@@ -1,6 +1,6 @@
 ARG JDK_IMAGE
 FROM ${JDK_IMAGE}
-MAINTAINER Galaxy
+MAINTAINER galaxy-data-platform
 VOLUME /tmp
 WORKDIR /home/galaxy/galaxy-auth-center
 ARG JAR_FILE
