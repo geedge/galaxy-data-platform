@@ -9,5 +9,7 @@
 **Spring Cloud Eureka** https://docs.spring.io/spring-cloud-netflix/docs/2.2.4.RELEASE/reference/html/
 
 **Spring Cloud Gateway** https://docs.spring.io/spring-cloud-gateway/docs/2.2.4.RELEASE/reference/html/
+
+**Spring Boot Admin** https://codecentric.github.io/spring-boot-admin/2.3.0/
 ## 系统架构图
 ![系统架构图](images/architecture-v1.0.jpg)
