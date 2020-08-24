@@ -65,6 +65,10 @@
         <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
         <galaxy.common.version>1.0-SNAPSHOT</galaxy.common.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <docker.registry>192.168.40.153</docker.registry>
+        <docker.registry.port>9080</docker.registry.port>
+        <docker.image.prefix>galaxy</docker.image.prefix>
     </properties>
 
     <dependencyManagement>
