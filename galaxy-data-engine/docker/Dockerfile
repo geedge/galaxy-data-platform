@@ -3,6 +3,9 @@ FROM ${JDK_IMAGE}
 MAINTAINER galaxy-data-platform
 VOLUME /tmp
 WORKDIR /home/galaxy/galaxy-data-engine
+COPY config config
+COPY mmdb mmdb
+COPY schema schema
 ARG JAR_FILE
 COPY ${JAR_FILE} galaxy-data-engine.jar
 ENV JAVA_OPTS=" -Xms1024m -Xmx2048m "

@@ -3,6 +3,7 @@ FROM ${JDK_IMAGE}
 MAINTAINER galaxy-data-platform
 VOLUME /tmp
 WORKDIR /home/galaxy/galaxy-eureka-server
+COPY config config
 ARG JAR_FILE
 COPY ${JAR_FILE} galaxy-eureka-server.jar
 ENV JAVA_OPTS=" -Xms1024m -Xmx2048m "
