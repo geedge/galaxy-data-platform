@@ -31,5 +31,5 @@
 
 ## 启动注意事项
 idea下启动项目需要设置一个启动参数,具体操作如下:
-Edit Configuration > Environment > Working directory: $MODULE_DIR$
+Edit Configuration > Environment > Working directory: **$MODULE_DIR$**
 
