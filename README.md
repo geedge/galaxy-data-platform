@@ -28,3 +28,8 @@
 4.  **[galaxy-gateway](https://git.mesalab.cn/galaxy/galaxy-data-platform/-/tree/master/galaxy-gateway) [可选]** 网关服务在Dev环境可以不启动,直接调用对应模块的IP:PORT即可测试
 
 5.  **[galaxy-admin-server](https://git.mesalab.cn/galaxy/galaxy-data-platform/-/tree/master/galaxy-admin-server) [可选]** 监控服务主在Dev环境也是可选的,如果想查看内存和线程使用情况,可以启动这个项目
+
+## 启动注意事项
+idea下启动项目需要设置一个启动参数,具体操作如下:
+Edit Configuration > Environment > Working directory: $MODULE_DIR$
+
