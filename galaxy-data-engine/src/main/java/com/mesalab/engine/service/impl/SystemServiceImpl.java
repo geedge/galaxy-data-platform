@@ -113,10 +113,8 @@ public class SystemServiceImpl implements SystemService {
             StorageDeletion reportInfo = getStorageDeletionInfoByHandler(LogType.REPORT_AND_METRICS.getValue(), JobHandlerEnum.DELETE_REPORT_AND_METRICS_DATA_JOB_HANDLER.getValue());
             list.add(reportInfo);
 
-            StorageDeletion storageDeletionInfo = new StorageDeletion();
-            storageDeletionInfo.setLogType(LogType.FILES.getValue());//伪代码
-            storageDeletionInfo.setMaxDays(365);
-            list.add(storageDeletionInfo);
+            StorageDeletion fileInfo = getStorageDeletionInfoByHandler(LogType.FILES.getValue(), JobHandlerEnum.DELETE_FILES_JOB_HANDLER.getValue());
+            list.add(fileInfo);
         } else if (LogType.TRAFFIC_LOGS.getValue().equalsIgnoreCase(logType)) {
             StorageDeletion trafficInfo = getStorageDeletionInfoByHandler(logType, JobHandlerEnum.DELETE_TRAFFIC_DATA_JOB_HANDLER.getValue());
             list.add(trafficInfo);
@@ -185,9 +183,6 @@ public class SystemServiceImpl implements SystemService {
         setCookie();
         for (StorageDeletion info : list) {
 
-            if (LogType.FILES.getValue().equalsIgnoreCase(info.getLogType())) { //伪代码
-                continue;
-            }
             String handler = getDeletePartHandlerByLogType(info.getLogType());
             if (jobIsBusyByHandler(handler)) {
                 return true;
@@ -220,10 +215,6 @@ public class SystemServiceImpl implements SystemService {
      * @return
      */
     private BaseResult executeDeleteStorageJob(StorageDeletion info) {
-
-        if (LogType.FILES.getValue().equalsIgnoreCase(info.getLogType())) { //伪代码
-            return BaseResultUtil.failure(HttpStatus.SC_OK, "ok");
-        }
 
         BaseResult baseResult;
         String jobHandler;

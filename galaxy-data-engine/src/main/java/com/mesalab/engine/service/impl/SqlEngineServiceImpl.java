@@ -104,9 +104,7 @@ public class SqlEngineServiceImpl implements SqlEngineService {
             } else {
                 log.warn("Long-Term Results not exist, execute real-time query: resultID-{}, sql-{}",
                         param.getResultId(), StringUtil.strip(param.getQuery()));
-
             }
-
         }
 
         Dialect dbDialect = parserSQL(param);
@@ -114,8 +112,8 @@ public class SqlEngineServiceImpl implements SqlEngineService {
             baseResult = dbDialect.executeSyntaxCheck().build();
         } else {
             baseResult = dbDialect.executeQuery().build();
-            baseResult = new FederationDialect(param, baseResult).executeQuery().build();
         }
+        baseResult = new FederationDialect(param, baseResult).executeQuery().build();
 
         if (!baseResult.isSuccess()) {
             throw new BusinessException(baseResult.getStatus(), baseResult.getCode(), baseResult.getMessage(), null);
