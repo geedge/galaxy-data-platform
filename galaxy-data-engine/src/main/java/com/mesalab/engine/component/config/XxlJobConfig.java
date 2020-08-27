@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class XxlJobConfig {
 
-    @Value("$xxl.job.admin.url")
+    @Value("${xxl.job.admin.url}")
     private String url;
 
-    @Value("$xxl.job.admin.username")
+    @Value("${xxl.job.admin.username}")
     private String userName;
 
-    @Value("$xxl.job.admin.password")
+    @Value("${xxl.job.admin.password}")
     private String password;
 }

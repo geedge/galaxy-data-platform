@@ -24,6 +24,7 @@ import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
+import net.sf.jsqlparser.expression.Parenthesis;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
@@ -202,24 +203,28 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
          * @param where
          */
         private void setInSubqueryAlias(Expression where) {
-            if (where instanceof InExpression) {//where in 查询处理
+            if (where instanceof InExpression) {
                 InExpression whereIn = (InExpression) where;
                 ItemsList rightItemsList = whereIn.getRightItemsList();
                 if (rightItemsList instanceof SubSelect) {
                     SubSelect sub = (SubSelect) rightItemsList;
                     SelectBody selectBody = sub.getSelectBody();
                     PlainSelect plainSelect = (PlainSelect) selectBody;
-                    Table table = (Table) plainSelect.getFromItem();
-                    if (StringUtil.isEmpty(table.getAlias())) {
-                        Alias alias = new Alias(table.getName());
-                        plainSelect.getFromItem().setAlias(alias);
+                    FromItem fromItem = plainSelect.getFromItem();
+                    if (fromItem instanceof Table) {
+                        Table table = (Table) fromItem;
+                        if (StringUtil.isEmpty(table.getAlias())) {
+                            Alias alias = new Alias(table.getName());
+                            plainSelect.getFromItem().setAlias(alias);
+                        }
+                    } else if (fromItem instanceof SubSelect) {
+                        SubSelect subSelect = (SubSelect) fromItem;
+                        generateSubqueryAlias(subSelect.getSelectBody().toString());
                     }
                     if (StringUtil.isNotEmpty(plainSelect.getWhere())) {
                         setInSubqueryAlias(plainSelect.getWhere());
                     }
-
                 }
-
             } else if (where instanceof AndExpression) {
                 AndExpression whereAnd = (AndExpression) where;
                 Expression leftExpression = whereAnd.getLeftExpression();
@@ -234,8 +239,6 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
                 setInSubqueryAlias(rightExpression);
             }
         }
-
-
     }
 
 
@@ -489,7 +492,8 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
                 log.warn("Get Partition Key is Null.Focus in tableName {} schema", param.getTableName());
                 return sql;
             } else {
-                StringBuffer subQuery = getSubquerySql(partitionKey, param.getTableName());
+                StringBuffer subQuery = getSubquerySql(partitionKey,
+                        metadataService.getDBNameByTableName(param.getTableName()) + "." + param.getTableName());
                 Matcher m = pWhere.matcher(sql);
                 StringBuffer sb = new StringBuffer();
                 while (m.find()) {
@@ -843,9 +847,17 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
 
     @Override
     public Dialect executeSyntaxCheck() {
-        String sql = getSyntaxCheckSql();
-        generateBaseResult(sql);
+        String sql = convertQuery(getSyntaxCheckSql());
         log.info("option=syntax-check:  original sql: {}, after transformation(return message) info: {}", param.getQuery(), sql);
+
+        Map<String, String> results = executeHttpGet(sql);
+        if (results.get("status").equals(String.valueOf(HttpStatus.SC_OK))) {
+            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.EXECUTE_SUCCESS.getCode(), Encodes.urlDecode(sql),
+                    JsonMapper.fromJsonString(results.get("result"), Map.class), null, null, QueryFormatEnum.JSON.getValue());
+        } else {
+            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.SQL_EXECUTION_ERROR.getCode(), results.get("message"),
+                    results.get("result"), null, null, param.getFormat());
+        }
         return this;
     }
 
@@ -853,7 +865,7 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
 
         Map<String, String> results = executeHttpGet(sql);
         if (results.get("status").equals(String.valueOf(HttpStatus.SC_OK))) {
-            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.EXECUTE_SUCCESS.getCode(), Encodes.urlDecode(sql),
+            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.EXECUTE_SUCCESS.getCode(), "ok",
                     JsonMapper.fromJsonString(results.get("result"), Map.class), null, null, QueryFormatEnum.JSON.getValue());
         } else {
             baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.SQL_EXECUTION_ERROR.getCode(), results.get("message"),
@@ -898,8 +910,123 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
      * @return
      */
     private String getSyntaxCheckSql() {
-        String query = convertQuery(findBestQuery());
-        return query;
+        String sql = param.getDbQuerySource().getSqlBody();
+        try {
+            sql = String.valueOf(parserAndUpdateSql(sql));
+        } catch (Exception e) {
+            log.error("syntax-check sql error {}, execute original sql: {}, error is: {} ",
+                    sql, sql = param.getDbQuerySource().getSqlBody(), e.getMessage() == null ? e.getCause() : e.getMessage());
+            e.printStackTrace();
+        }
+        return sql;
+    }
+
+    /**
+     *
+     * 做数据集限制: 将最内层sql的表名, 替换成(select * from tableName limit XXX) as alias
+     *   涉及from 和 where中存在子查询
+     *
+     * @param sql
+     * @return
+     * @throws JSQLParserException
+     */
+    private SelectBody parserAndUpdateSql(String sql) throws JSQLParserException {
+        Statement parse = CCJSqlParserUtil.parse(sql);
+        if (parse instanceof Select) {
+            Select select = (Select) parse;
+            SelectBody selectBody = select.getSelectBody();
+            if (selectBody instanceof PlainSelect) {
+                PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+                FromItem fromItem = plainSelect.getFromItem();
+                if (fromItem instanceof SubSelect) {
+                    SubSelect subSelect = (SubSelect) plainSelect.getFromItem();
+                    subSelect.setSelectBody(parserAndUpdateSql(subSelect.getSelectBody().toString()));
+                } else if (fromItem instanceof Table) {
+                    Table table = (Table) fromItem;
+                    plainSelect.setFromItem(generateDataSetSql(table.getName(), table.getAlias() != null ? table.getAlias().getName() : table.getName()));
+                }
+                parseWhereAndUpdate(plainSelect.getWhere());
+                return plainSelect;
+            } else if (selectBody instanceof SetOperationList) {
+                SetOperationList setOperationList = (SetOperationList) selectBody;
+                List<SelectBody> selects = setOperationList.getSelects();
+                for (int i = 0; i < selects.size(); i++) {
+                    selects.set(i, parserAndUpdateSql(selects.get(i).toString()));
+                }
+                return setOperationList;
+            } else {
+                throw new BusinessException("Only support selectBody operation: PlainSelect or SetOperationList");
+            }
+        }
+        throw new BusinessException("Only support statement operation as select");
+    }
+
+    /**
+     * 将where中子查询语句表名更新为数据集形式,类同from中表的替换
+     *
+     * @param whereExpression
+     * @throws JSQLParserException
+     */
+    private void parseWhereAndUpdate(Expression whereExpression) throws JSQLParserException {
+        if (whereExpression instanceof ComparisonOperator) {
+            ComparisonOperator whereOperator = (ComparisonOperator) whereExpression;
+            Expression left = whereOperator.getLeftExpression();
+            setSelectBody(left);
+            Expression right = whereOperator.getRightExpression();
+            setSelectBody(right);
+        } else if (whereExpression instanceof InExpression) {
+            InExpression inExpression = (InExpression) whereExpression;
+            Expression leftExpression = inExpression.getLeftExpression();
+            setSelectBody(leftExpression);
+            ItemsList rightItemsList = inExpression.getRightItemsList();
+            if (rightItemsList instanceof SubSelect) {
+                SubSelect subSelect = (SubSelect) rightItemsList;
+                setSelectBody(subSelect);
+            }
+        } else if (whereExpression instanceof Between) {
+            Between whereBetween = (Between) whereExpression;
+            Expression betweenExpressionStart = whereBetween.getBetweenExpressionStart();
+            setSelectBody(betweenExpressionStart);
+            Expression betweenExpressionEnd = whereBetween.getBetweenExpressionEnd();
+            setSelectBody(betweenExpressionEnd);
+        } else if (whereExpression instanceof AndExpression) {
+            AndExpression whereAnd = (AndExpression) whereExpression;
+            parseWhereAndUpdate(whereAnd.getLeftExpression());
+            parseWhereAndUpdate(whereAnd.getRightExpression());
+        } else if (whereExpression instanceof OrExpression) {
+            OrExpression whereOr = (OrExpression) whereExpression;
+            parseWhereAndUpdate(whereOr.getLeftExpression());
+            parseWhereAndUpdate(whereOr.getRightExpression());
+        } else if (whereExpression instanceof Parenthesis) {
+            Parenthesis whereExpressionParenthesis = (Parenthesis) whereExpression;
+            Expression expression = whereExpressionParenthesis.getExpression();
+            parseWhereAndUpdate(expression);
+        }
+    }
+
+    private void setSelectBody(Expression expression) throws JSQLParserException {
+        if (expression instanceof SubSelect) {
+            SubSelect subSelect = (SubSelect) expression;
+            SelectBody selectBody = subSelect.getSelectBody();
+            subSelect.setSelectBody(parserAndUpdateSql(selectBody.toString()));
+        }
+    }
+
+    /**
+     * 生成数据集: 以FromItem对象形式的数据集表 sql,用来替换table
+     *
+     * @param tableName
+     * @param alias
+     * @return
+     * @throws JSQLParserException
+     */
+    private FromItem generateDataSetSql(String tableName, String alias) throws JSQLParserException {
+        String sql = String.format("SELECT 1 FROM (SELECT * FROM %s  LIMIT %s ) as %s ",
+                tableName, 10, alias);
+        Statement parse = CCJSqlParserUtil.parse(sql);
+        Select select = (Select) parse;
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        return plainSelect.getFromItem();
     }
 
 

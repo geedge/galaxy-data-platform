@@ -2,6 +2,7 @@ package com.mesalab.engine.component.dialect;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Maps;
+import com.mesalab.common.exception.BusinessException;
 import com.mesalab.common.util.DataTypeUtil;
 import com.mesalab.engine.component.bean.SqlQueryBean;
 import com.mesalab.engine.component.bean.ApiQueryBean;
@@ -16,10 +17,17 @@ import com.mesalab.engine.component.SqlFunction;
 import com.mesalab.engine.component.config.DruidConfig;
 import com.mesalab.engine.component.config.EngineConfig;
 import com.mesalab.engine.service.HttpClientService;
+import com.zdjizhi.utils.Encodes;
 import com.zdjizhi.utils.JsonMapper;
 import com.zdjizhi.utils.StringUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.*;
 import org.apache.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -109,12 +117,16 @@ public class DruidDialect extends AbstractDataSourceDialect {
 
     @Override
     public Dialect executeSyntaxCheck() {
-        String query = convertQuery(param.getDbQuerySource().getSqlBody());
-        Map<String, String> results = executeHttpPost("select 1");
+        String query = convertQuery(getSyntaxCheckSql());
+        Map<String, String> results = executeHttpPost(query);
 
-        baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), null, query,
-                (List<Object>) JsonMapper.fromJsonString(results.get("result"), Object.class), null, null, param.getFormat());
-        log.info("option=syntax-check:  original sql: {}, after transformation(return message) info: {}", param.getQuery(), query);
+        if (results.get("status").equals(String.valueOf(HttpStatus.SC_OK))) {
+            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")),ResultCodeEnum.EXECUTE_SUCCESS.getCode(), query,
+                    (List<Object>) JsonMapper.fromJsonString(results.get("result"), Object.class), null, null, param.getFormat());
+        } else {
+            baseResult = BaseResultUtil.generate(Integer.valueOf(results.get("status")), ResultCodeEnum.SQL_EXECUTION_ERROR.getCode(), results.get("message"),
+                    results.get("result"), null, null, param.getFormat());
+        }
         return this;
     }
 
@@ -154,6 +166,78 @@ public class DruidDialect extends AbstractDataSourceDialect {
         }
         return baseResult;
     }
+
+
+    /**
+     * 获取语法检测sql
+     *
+     * @return
+     */
+    private String getSyntaxCheckSql() {
+        String sql = param.getDbQuerySource().getSqlBody();
+        try {
+            sql = String.valueOf(parserAndUpdateSql(sql));
+        } catch (Exception e) {
+            log.error("syntax-check sql error {}, execute original sql: {}, error is: {} ",
+                    sql, sql = param.getDbQuerySource().getSqlBody(), e.getMessage() == null ? e.getCause() : e.getMessage());
+            e.printStackTrace();
+        }
+        return sql;
+    }
+
+    /**
+     * 做时间范围条件过滤: 去除原有最内层条件, 重新添加时间范围
+     *
+     * @param sql
+     * @return
+     * @throws JSQLParserException
+     */
+    private SelectBody parserAndUpdateSql(String sql) throws JSQLParserException {
+        Statement parse = CCJSqlParserUtil.parse(sql);
+        if (parse instanceof Select) {
+            Select select = (Select) parse;
+            SelectBody selectBody = select.getSelectBody();
+            if (selectBody instanceof PlainSelect) {
+                PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+                FromItem fromItem = plainSelect.getFromItem();
+                if (fromItem instanceof SubSelect) {
+                    SubSelect subSelect = (SubSelect) plainSelect.getFromItem();
+                    subSelect.setSelectBody(parserAndUpdateSql(subSelect.getSelectBody().toString()));
+                } else if (fromItem instanceof Table) {
+                    plainSelect.setWhere(generateDataSetSql());
+                    return plainSelect;
+                }
+                return plainSelect;
+            } else if (selectBody instanceof SetOperationList) {
+                SetOperationList setOperationList = (SetOperationList) selectBody;
+                List<SelectBody> selects = setOperationList.getSelects();
+                for (int i = 0; i < selects.size(); i++) {
+                    selects.set(i, parserAndUpdateSql(selects.get(i).toString()));
+                }
+                return setOperationList;
+            } else {
+                throw new BusinessException("Only support selectBody operation: PlainSelect or SetOperationList");
+            }
+        }
+        throw new BusinessException("Only support statement operation as select");
+    }
+
+
+    /**
+     * 生成where条件: 以Expression对象形式
+     *
+     * @return
+     * @throws JSQLParserException
+     */
+    private Expression generateDataSetSql() throws JSQLParserException {
+        String sql = String.format("SELECT * FROM tableName WHERE %s >= CURRENT_TIMESTAMP - INTERVAL '%s' HOUR ", param.getDbQuerySource().getPartitionKey(), 1);
+        Statement parse = CCJSqlParserUtil.parse(sql);
+        Select select = (Select) parse;
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        return plainSelect.getWhere();
+    }
+
+
 
     private List getMeta(List<Object> results) {
         List meta = new ArrayList<Map<String, String>>();
