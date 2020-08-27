@@ -17,4 +17,13 @@ public interface AuthorizeService {
      * @return: java.lang.String
      **/
     String arangoJwtLogin() throws BusinessException;
+
+    /**
+     * @Description: 验证ArangoJwtToken是否有效
+     * @Author: liuyongqiang
+     * @Date: 2020/8/27 18:07
+     * @param token:
+     * @return: boolean
+     **/
+    boolean tokenValidate(String token)throws BusinessException;
 }

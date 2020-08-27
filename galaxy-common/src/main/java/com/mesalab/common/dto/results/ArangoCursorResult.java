@@ -23,6 +23,7 @@ public class ArangoCursorResult {
     private ExtraBean extra;
     private boolean error;
     private int code;
+    private int errorNum;
     private List<Map<String,Object>> result;
 
     @Data

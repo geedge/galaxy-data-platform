@@ -1,15 +1,23 @@
 package com.mesalab.auth.service.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.mesalab.auth.component.config.ArangoConfig;
 import com.mesalab.auth.service.AuthorizeService;
 import com.mesalab.common.annotation.SysLog;
+import com.mesalab.common.dto.results.ArangoCursorResult;
 import com.mesalab.common.enums.CacheKeyEnum;
 import com.mesalab.common.exception.BusinessException;
 import com.mesalab.common.util.HttpClientUtil;
 import com.mesalab.common.util.MemoryCache;
 import com.mesalab.common.util.SysConstant;
+import com.zdjizhi.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,12 +35,8 @@ import java.util.Objects;
 @Service("jwtAuthorizeService")
 public class AuthorizeServiceImpl implements AuthorizeService {
 
-    @Value("${arango.username}")
-    String arangoUserName;
-    @Value("${arango.password}")
-    String arangoPassWord;
-    @Value("${arango.authurl}")
-    String arangoAuthUrl;
+    @Autowired
+    ArangoConfig arangoConfig;
 
     /**
      * @Description: ArangoDBJwt登录
@@ -46,17 +50,23 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 
         String cacheKey = CacheKeyEnum.ARONGO_JWT_KEY.getKey();
         Object cacheVal = MemoryCache.getInstance().get(cacheKey);
-        log.info("从缓存中获取的arangoJwt字符串为:{}",cacheVal);
-        if(Objects.nonNull(cacheVal))
-            return String.valueOf(cacheVal);
+        log.info("从缓存中获取的Token为:{}",cacheVal);
+        if(Objects.nonNull(cacheVal)){
+            if(tokenValidate(String.valueOf(cacheVal))){
+                log.info("从缓存中获取的Token未失效!");
+                return String.valueOf(cacheVal);
+            }else{
+                log.info("从缓存中获取的Token已失效!");
+            }
+        }
 
         Map<String, String> params = new HashMap<>();
-        params.put("username", arangoUserName);
-        params.put("password", arangoPassWord);
-        String jwtStr = null;
+        params.put("username", arangoConfig.getUserName());
+        params.put("password", arangoConfig.getPassWord());
+        String jwtStr;
 
         try {
-            String jsonRes = HttpClientUtil.httpPost(arangoAuthUrl,new Gson().toJson(params));
+            String jsonRes = HttpClientUtil.httpPost(arangoConfig.getAuthUrl(),new Gson().toJson(params));
             params = new Gson().fromJson(jsonRes,Map.class);
             jwtStr = params.get(SysConstant.ARANGO_JWT_STR);
             log.info("请求arango授权接口获取的jwt:{}",jwtStr);
@@ -69,4 +79,22 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 
         return jwtStr;
     }
+
+    /**
+     * @Description: 验证ArangoJwtToken是否有效
+     * @Author: liuyongqiang
+     * @Date: 2020/8/27 18:07
+     * @param token:
+     * @return: boolean
+     **/
+    @Override
+    public boolean tokenValidate(String token) throws BusinessException {
+        Map queryMap = ImmutableMap.of("query","");
+        String jwtStr = SysConstant.ARANGO_JWT_PRE.concat(token);
+        Header header = new BasicHeader(HttpHeaders.AUTHORIZATION, jwtStr);
+        String res = HttpClientUtil.httpPost(arangoConfig.getQueryurl(),new Gson().toJson(queryMap), header);
+        ArangoCursorResult result = new Gson().fromJson(res,ArangoCursorResult.class);
+        return result.getErrorNum()!=11;//errorNum为11代表token失效
+    }
+
 }
