@@ -16,9 +16,6 @@ public class ArangoConfig {
     @Value("${arango.query.url}")
     private String queryurl;
 
-    @Value("${arango.maxrows}")
-    private String maxrows;
-
     @Value("${arango.username}")
     private String userName;
 
