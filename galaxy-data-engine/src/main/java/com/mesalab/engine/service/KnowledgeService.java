@@ -123,7 +123,7 @@ public class KnowledgeService {
             Validate.notEmpty(limits, "limit is illegal");
             Validate.isTrue(!(limit.contains(",") && limits.size() != 2), "limit is illegal");
             for (String l : limits) {
-                Validate.isTrue(l.length() <= maxrows.length() && Integer.valueOf(maxrows) >= Integer.valueOf(l) && Integer.valueOf(l) > 0, "limit is greater than 0 and less than " + maxrows);
+                Validate.isTrue(l.length() <= maxrows.length() && Integer.valueOf(maxrows) >= Integer.valueOf(l) && Integer.valueOf(l) >= 0, "limit is greater than 0 and less than " + maxrows);
             }
         }
     }
