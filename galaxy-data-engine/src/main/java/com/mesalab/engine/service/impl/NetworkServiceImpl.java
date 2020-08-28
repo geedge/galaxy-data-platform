@@ -11,7 +11,7 @@ import com.mesalab.common.enums.ResultStatusEnum;
 import com.mesalab.common.exception.BusinessException;
 import com.mesalab.common.model.ProtocolTree;
 import com.mesalab.common.util.BaseResultUtil;
-import com.mesalab.common.util.TreeUtils;
+import com.mesalab.common.util.TreeUtil;
 import com.mesalab.engine.service.HttpClientService;
 import com.mesalab.engine.service.NetworkService;
 import com.zdjizhi.utils.JsonMapper;
@@ -322,7 +322,7 @@ public class NetworkServiceImpl implements NetworkService {
                     }
                 });
         List<ProtocolTree> mergeNodes = new ArrayList(mergeResultMap.values());
-        return TreeUtils.mergeTree(mergeNodes, ProtocolTree::getId, ProtocolTree::getParentId, ProtocolTree::setChildrens);
+        return TreeUtil.mergeTree(mergeNodes, ProtocolTree::getId, ProtocolTree::getParentId, ProtocolTree::setChildrens);
     }
 
     enum QueryType {

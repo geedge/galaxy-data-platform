@@ -81,11 +81,11 @@ public class SqlHelper {
      */
     public static String getDialectDBType(String dbType) {
         if (DBTypeEnum.CLICKHOUSE.getValue().equals(dbType)) {
-            return JdbcConstants.MYSQL;
+            return JdbcConstant.MYSQL;
         } else if (DBTypeEnum.DRUID.getValue().equals(dbType)) {
-            return JdbcConstants.HIVE;
+            return JdbcConstant.HIVE;
         } else if (DBTypeEnum.HBASE.getValue().equals(dbType)) {
-            return JdbcConstants.MYSQL;
+            return JdbcConstant.MYSQL;
         } else {
             return null;
         }

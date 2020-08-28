@@ -3,10 +3,10 @@ package com.mesalab.common.util;
 /**
  * @Date: 2020-08-18 17:47
  * @Author : liuyongqiang
- * @ClassName : JdbcConstants
- * @Description : JdbcConstants
+ * @ClassName : JdbcConstant
+ * @Description : JdbcConstant
  */
-public interface JdbcConstants {
+public interface JdbcConstant {
 
     String MYSQL = "mysql";
 
