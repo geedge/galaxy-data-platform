@@ -5,7 +5,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.mesalab.engine.component.bean.SqlQueryBean;
-import com.mesalab.engine.component.calcite.CalciteMemoryUtil;
+import com.mesalab.engine.component.calcite.CalciteMemory;
 import com.mesalab.engine.component.udf.UDF;
 import com.mesalab.engine.component.bean.ApiQueryBean;
 import com.mesalab.common.dto.results.BaseResult;
@@ -57,7 +57,7 @@ public class FederationDialect extends AbstractEngineDialect {
 
                 if (StringUtil.isNotEmpty(param.getEngineQuerySource())) {
                     SqlQueryBean sqlQuerySource = param.getEngineQuerySource();
-                    Map resultMap = CalciteMemoryUtil.executeMemoryQuery(sqlQuerySource.getTableName(),
+                    Map resultMap = CalciteMemory.executeMemoryQuery(sqlQuerySource.getTableName(),
                             (List<Map<String, String>>) baseResult.getMeta(),
                             (List<Map<String, Object>>) baseResult.getData(), param.getQuery());
                     baseResult.setData(resultMap.get("data"));

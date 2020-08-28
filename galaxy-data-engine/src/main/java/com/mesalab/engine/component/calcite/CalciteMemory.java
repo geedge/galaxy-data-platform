@@ -17,7 +17,7 @@ import java.util.Properties;
 
 @Slf4j
 @SuppressWarnings("unchecked")
-public class CalciteMemoryUtil {
+public class CalciteMemory {
 
     public static Map<String, Object> executeMemoryQuery(String tableName, List<Map<String, String>> meta,
                                                          List<Map<String, Object>> data, String sql) {
