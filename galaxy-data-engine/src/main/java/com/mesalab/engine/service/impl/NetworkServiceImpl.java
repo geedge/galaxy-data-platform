@@ -52,7 +52,6 @@ public class NetworkServiceImpl implements NetworkService {
         try {
             hostAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
             log.error("get LocalHost error: ", e);
         }
     }
@@ -256,7 +255,6 @@ public class NetworkServiceImpl implements NetworkService {
         try {
             sql = URLEncoder.encode(sql, "utf-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
             hostAddress = "127.0.0.1";
             log.error("sql Encode error: ", e);
         }

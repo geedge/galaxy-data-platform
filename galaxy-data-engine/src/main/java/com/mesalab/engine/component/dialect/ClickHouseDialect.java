@@ -2,8 +2,6 @@ package com.mesalab.engine.component.dialect;
 
 
 import com.google.common.collect.Maps;
-import com.mesalab.engine.component.bean.SqlQueryBean;
-import com.mesalab.engine.component.bean.ApiQueryBean;
 import com.mesalab.common.dto.results.BaseResult;
 import com.mesalab.common.enums.*;
 import com.mesalab.common.exception.BusinessException;
@@ -12,6 +10,8 @@ import com.mesalab.common.util.SqlHelper;
 import com.mesalab.engine.component.ReportCache;
 import com.mesalab.engine.component.SpringContext;
 import com.mesalab.engine.component.SqlFunction;
+import com.mesalab.engine.component.bean.ApiQueryBean;
+import com.mesalab.engine.component.bean.SqlQueryBean;
 import com.mesalab.engine.component.config.ClickHouseConfig;
 import com.mesalab.engine.component.config.EngineConfig;
 import com.mesalab.engine.service.HttpClientService;
@@ -843,7 +843,6 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
         try {
             return CCJSqlParserUtil.parseExpression(originalField);
         } catch (JSQLParserException e) {
-            e.printStackTrace();
             throw new BusinessException("parseExpression error: " + originalField);
         }
     }
@@ -933,15 +932,13 @@ public class ClickHouseDialect extends AbstractDataSourceDialect {
         } catch (Exception e) {
             log.error("syntax-check sql error {}, execute original sql: {}, error is: {} ",
                     sql, sql = param.getDbQuerySource().getSqlBody(), e.getMessage() == null ? e.getCause() : e.getMessage());
-            e.printStackTrace();
         }
         return sql;
     }
 
     /**
-     *
      * 做数据集限制: 将最内层sql的表名, 替换成(select * from tableName limit XXX) as alias
-     *   涉及from 和 where中存在子查询
+     * 涉及from 和 where中存在子查询
      *
      * @param sql
      * @return

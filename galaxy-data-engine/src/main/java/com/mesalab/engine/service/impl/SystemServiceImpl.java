@@ -455,9 +455,9 @@ public class SystemServiceImpl implements SystemService {
         try {
             bean = clazz.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            log.error("mapToBean Error:{}",e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("mapToBean Error:{}",e.getMessage());
         }
         BeanMap beanMap = BeanMap.create(bean);
         beanMap.putAll(map);
@@ -474,7 +474,7 @@ public class SystemServiceImpl implements SystemService {
             try {
                 value = field.get(obj);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
             if (value == null) {
                 value = "";

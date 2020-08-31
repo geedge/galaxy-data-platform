@@ -65,7 +65,6 @@ public class SqlHelper {
             select.setLimit(limit);
             sql = String.valueOf(selectStatement.getSelectBody());
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("Set limit error, SQL is:{} , Error Message is :{} ", sql, e);
         }
 
