@@ -1,4 +1,4 @@
-package com.mesalab.engine.service.impl;
+package com.mesalab.engine.service;
 
 import com.google.common.collect.Maps;
 import com.mesalab.common.dto.results.BaseResult;
@@ -9,6 +9,7 @@ import com.mesalab.engine.component.SchemaCache;
 import com.mesalab.engine.component.config.ClickHouseConfig;
 import com.mesalab.engine.component.config.DruidConfig;
 import com.mesalab.engine.service.HttpClientService;
+import com.mesalab.engine.service.impl.SqlEngineServiceImpl;
 import com.zdjizhi.utils.Encodes;
 import com.zdjizhi.utils.JsonMapper;
 import com.zdjizhi.utils.StringUtil;
@@ -33,7 +34,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class TestSqlServiceImpl {
+public class TestCaseService {
 
     @Autowired
     HttpClientService httpClientService;

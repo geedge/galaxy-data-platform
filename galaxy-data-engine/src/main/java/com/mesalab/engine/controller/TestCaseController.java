@@ -3,7 +3,7 @@ package com.mesalab.engine.controller;
 import com.mesalab.common.dto.results.BaseResult;
 import com.mesalab.common.util.BaseResultUtil;
 import com.mesalab.engine.component.configuration.ProjectProperties;
-import com.mesalab.engine.service.impl.TestSqlServiceImpl;
+import com.mesalab.engine.service.TestCaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 /**
- * 测试Controller
- * 使用@RestController可以不需要使用@ResponseBody注解，方法会自动处理成json格式返回
+ * 测试案例控制层
  *
  * @author darnell
  * @date 2019/5/13
@@ -25,12 +24,12 @@ import java.util.Arrays;
 @RequestMapping(value = "test")
 public class TestCaseController {
 
-    private final ProjectProperties projectProperties;
+    ProjectProperties projectProperties;
 
-    private final Environment environment;
+    Environment environment;
 
     @Autowired
-    TestSqlServiceImpl testSqlService;
+    TestCaseService testCaseService;
 
     @Autowired
     public TestCaseController(ProjectProperties projectProperties, Environment environment) {
@@ -101,11 +100,12 @@ public class TestCaseController {
 
     /**
      * 运行测试用例
+     *
      * @return
      */
     @GetMapping(value = "runSql")
-    public BaseResult runSql(){
-        BaseResult result = testSqlService.runSql();
+    public BaseResult runSql() {
+        BaseResult result = testCaseService.runSql();
         return result;
     }
 
@@ -116,7 +116,7 @@ public class TestCaseController {
      */
     @GetMapping(value = "runSchema")
     public BaseResult runSchema() {
-        BaseResult result = testSqlService.runSchema();
+        BaseResult result = testCaseService.runSchema();
         return result;
     }
 
