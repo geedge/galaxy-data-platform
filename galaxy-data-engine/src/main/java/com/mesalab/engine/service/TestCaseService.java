@@ -34,6 +34,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@SuppressWarnings("unchecked")
 public class TestCaseService {
 
     @Autowired
