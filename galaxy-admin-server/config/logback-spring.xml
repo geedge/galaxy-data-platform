@@ -4,18 +4,17 @@
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <!-- 开发环境-日志输出控制台格式 -->
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-    <!--日志文件输出格式-->
+
     <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-    <!-- 测试环境-文件路径 -->
+
     <property name="TEST_FILE_PATH" value="/home/galaxy/galaxy-admin-server/logs" />
-    <!-- 生产环境-文件路径 -->
+
     <property name="PROD_FILE_PATH" value="/home/galaxy/galaxy-admin-server/logs" />
-    <!--文件名称-->
+
     <property name="LOG_NAME" value="galaxy-admin-server" />
 
-    <!-- 开发环境 -->
+    <!-- dev env -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -25,9 +24,8 @@
         <appender-ref ref="CONSOLE" />
     </root>
 
-    <!-- 测试环境 -->
+    <!-- test env -->
     <springProfile name="test">
-        <!-- 每天产生一个文件 -->
         <appender name="TEST_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -36,7 +34,7 @@
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <!-- rollover daily -->
                 <fileNamePattern>${TEST_FILE_PATH}${file.separator}${LOG_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+                <!-- each file should be at most 100MB, keep 30 days worth of history, but at most 20GB -->
                 <maxHistory>30</maxHistory>
                 <maxFileSize>100MB</maxFileSize>
             </rollingPolicy>
@@ -46,7 +44,7 @@
         </root>
     </springProfile>
 
-    <!-- 生产环境 -->
+    <!-- prod env -->
     <springProfile name="prod">
         <appender name="PROD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <encoder>
@@ -56,7 +54,7 @@
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <!-- rollover daily -->
                 <fileNamePattern>${PROD_FILE_PATH}${file.separator}${LOG_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-                <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+                <!-- each file should be at most 100MB, keep 30 days worth of history, but at most 20GB -->
                 <maxHistory>30</maxHistory>
                 <maxFileSize>100MB</maxFileSize>
             </rollingPolicy>
