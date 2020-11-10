@@ -1,12 +1,12 @@
 package com.mesalab.common.dto.params;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 

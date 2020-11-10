@@ -33,16 +33,21 @@
     <modules>
         <!--公共组件-->
         <module>galaxy-common</module>
-        <!--注册中心-->
-        <module>galaxy-eureka-server</module>
         <!--查询网关-->
         <module>galaxy-gateway</module>
         <!--查询引擎-->
-        <module>galaxy-data-engine</module>
+        <module>galaxy-query-engine</module>
         <!--认证中心-->
         <module>galaxy-auth-center</module>
         <!--监控服务-->
         <module>galaxy-admin-server</module>
+        <!--业务API-->
+        <module>galaxy-business-api</module>
+        <module>galaxy-hos-service</module>
+        <module>galaxy-report-service</module>
+        <module>galaxy-job-admin</module>
+        <module>galaxy-job-executor</module>
+        <module>galaxy-job-core</module>
     </modules>
 
     <properties>
@@ -54,6 +59,7 @@
         <zdjizhi.version>1.0.4</zdjizhi.version>
         <commonsio.version>2.2</commonsio.version>
         <joda.time.version>2.6</joda.time.version>
+        <jakarta.version>3.0.0</jakarta.version>
         <jsqlparser.version>3.0</jsqlparser.version>
         <google.gson.version>2.8.6</google.gson.version>
         <json.schema.version>2.2.10</json.schema.version>
@@ -62,7 +68,7 @@
         <commons.lang3.version>3.5</commons.lang3.version>
         <calcite.core.version>1.22.0</calcite.core.version>
         <spring.cloud.version>Hoxton.SR1</spring.cloud.version>
-        <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
+        <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
         <galaxy.common.version>1.0-SNAPSHOT</galaxy.common.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
