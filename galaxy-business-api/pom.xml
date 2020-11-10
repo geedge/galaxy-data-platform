@@ -12,5 +12,7 @@
     <artifactId>galaxy-business-api</artifactId>
     <packaging>jar</packaging>
 
-
+    <build>
+        <finalName>galaxy-business-api</finalName>
+    </build>
 </project>

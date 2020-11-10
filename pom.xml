@@ -31,23 +31,27 @@
     </distributionManagement>
 
     <modules>
-        <!--公共组件-->
+        <!--公共模块-->
         <module>galaxy-common</module>
         <!--查询网关-->
         <module>galaxy-gateway</module>
-        <!--查询引擎-->
-        <module>galaxy-query-engine</module>
         <!--认证中心-->
         <module>galaxy-auth-center</module>
         <!--监控服务-->
         <module>galaxy-admin-server</module>
         <!--业务API-->
         <module>galaxy-business-api</module>
+        <!--文件服务-->
         <module>galaxy-hos-service</module>
+        <!--报表服务-->
         <module>galaxy-report-service</module>
+        <!--定时任务后台管理-->
         <module>galaxy-job-admin</module>
+        <!--定时任务执行器-->
         <module>galaxy-job-executor</module>
+        <!--定时任务核心模块-->
         <module>galaxy-job-core</module>
+        <module>galaxy-query-engine</module>
     </modules>
 
     <properties>

@@ -48,7 +48,7 @@
                 </executions>
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
-                    <mainClass>com.mesalab.gateway.GalaxyGatewayApp</mainClass>
+                    <mainClass>com.mesalab.api.gateway.GalaxyGatewayApp</mainClass>
                 </configuration>
             </plugin>
             <plugin>
