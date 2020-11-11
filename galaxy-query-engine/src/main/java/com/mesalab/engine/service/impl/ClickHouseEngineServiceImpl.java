@@ -42,7 +42,7 @@ public class ClickHouseEngineServiceImpl implements ClickHouseEngineService {
     @Override
     public BaseResult dslQuery(DSLObject dslObject) throws BusinessException {
         String executeSql = clickHouseDSLParser.allQuery(dslObject);
-        String jsonResult = executeService.executeClickHouseSql(executeSql);
+        String jsonResult = executeService.executeClickHouseQuery(executeSql);
         return assemble(jsonResult);
     }
 
@@ -56,7 +56,7 @@ public class ClickHouseEngineServiceImpl implements ClickHouseEngineService {
     @Override
     public BaseResult tablesQuery(DSLObject dslObject) throws BusinessException {
         String executeSql = ClickHouseParser.TABLES_QUERY;
-        String jsonResult = executeService.executeClickHouseSql(executeSql);
+        String jsonResult = executeService.executeClickHouseQuery(executeSql);
         return assemble(jsonResult);
     }
 
@@ -71,7 +71,7 @@ public class ClickHouseEngineServiceImpl implements ClickHouseEngineService {
     public BaseResult schemaQuery(DSLObject dslObject) throws BusinessException {
         String dataSource = dslObject.getDataSource();
         String executeSql = MessageFormat.format(ClickHouseParser.SCHEAM_QUERY, dataSource);
-        return assemble(executeService.executeClickHouseSql(executeSql));
+        return assemble(executeService.executeClickHouseQuery(executeSql));
     }
 
     /**

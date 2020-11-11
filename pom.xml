@@ -70,7 +70,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <commons.lang3.version>3.5</commons.lang3.version>
         <calcite.core.version>1.22.0</calcite.core.version>
-        <spring.cloud.version>Finchley.RC2</spring.cloud.version>
+        <spring.cloud.version>Finchley.RELEASE</spring.cloud.version>
         <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
         <galaxy.common.version>1.0-SNAPSHOT</galaxy.common.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -86,6 +86,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

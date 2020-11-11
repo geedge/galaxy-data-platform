@@ -17,7 +17,7 @@ public interface EngineExecuteService {
      * @Date: 2020/7/22 16:16
      * @return: java.lang.String
      **/
-    String executeDruidSql(String sql) throws BusinessException;
+    String executeDruidQuery(String sql) throws BusinessException;
 
     /**
      * @param sql:
@@ -26,6 +26,6 @@ public interface EngineExecuteService {
      * @Date: 2020/7/22 16:16
      * @return: java.lang.String
      **/
-    String executeClickHouseSql(String sql) throws BusinessException;
+    String executeClickHouseQuery(String sql) throws BusinessException;
 
 }

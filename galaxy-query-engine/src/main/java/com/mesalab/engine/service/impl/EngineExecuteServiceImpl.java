@@ -26,19 +26,19 @@ public class EngineExecuteServiceImpl implements EngineExecuteService {
 
     final Header JSON_HEADER = new BasicHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-    @Value("${druid.query.url}")
+    @Value("${druid.query}")
     String druidQueryUrl;
-    @Value("${clickhouse.query.url}")
+    @Value("${clickhouse.query}")
     String clickHouseQueryUrl;
     @Value("${clickhouse.dbname}")
     String clickHouseDbName;
-    @Value("${clickhouse.real.time.username}")
+    @Value("${clickhouse.realTimeAccount.username}")
     String ckRealTimeUsername;
-    @Value("${clickhouse.real.time.password}")
+    @Value("${clickhouse.realTimeAccount.password}")
     String ckRealTimePassword;
 
     @Override
-    public String executeDruidSql(String sql) throws BusinessException {
+    public String executeDruidQuery(String sql) throws BusinessException {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("query", sql);
         String jsonParam = new Gson().toJson(queryParams);
@@ -46,7 +46,7 @@ public class EngineExecuteServiceImpl implements EngineExecuteService {
     }
 
     @Override
-    public String executeClickHouseSql(String sql) throws BusinessException {
+    public String executeClickHouseQuery(String sql) throws BusinessException {
         String url = clickHouseQueryUrl
                 .concat("/?user=")
                 .concat(ckRealTimeUsername)

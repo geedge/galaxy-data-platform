@@ -40,7 +40,7 @@ public class DruidEngineServiceImpl implements DruidEngineService {
     @Override
     public BaseResult dslQuery(DSLObject dslObject) throws BusinessException {
         String executeSql = druidDSLParse.allQuery(dslObject);
-        String jsonResult = executeService.executeDruidSql(executeSql);
+        String jsonResult = executeService.executeDruidQuery(executeSql);
         List<Map<String, Object>> results = new Gson().fromJson(jsonResult, List.class);
         dataFormat(results);
         return BaseResultUtil.success(results);
@@ -57,7 +57,7 @@ public class DruidEngineServiceImpl implements DruidEngineService {
     @Override
     public BaseResult tablesQuery(DSLObject dslObject) throws BusinessException {
         String executeSql = DruidParser.TABLES_QUERY;
-        String jsonResult = executeService.executeDruidSql(executeSql);
+        String jsonResult = executeService.executeDruidQuery(executeSql);
         List<Map<String, Object>> results = new Gson().fromJson(jsonResult, List.class);
         return BaseResultUtil.success(results);
     }
@@ -73,7 +73,7 @@ public class DruidEngineServiceImpl implements DruidEngineService {
     public BaseResult schemaQuery(DSLObject dslObject) throws BusinessException {
         String dataSource = dslObject.getDataSource();
         String executeSql = MessageFormat.format(DruidParser.SCHEAM_QUERY, dataSource);
-        String jsonResult = executeService.executeDruidSql(executeSql);
+        String jsonResult = executeService.executeDruidQuery(executeSql);
         List<Map<String, Object>> results = new Gson().fromJson(jsonResult, List.class);
         return BaseResultUtil.success(results);
     }

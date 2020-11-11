@@ -1,0 +1,31 @@
+## application config
+server:
+  port: 8800
+spring:
+  application:
+    name: galaxy-admin-server
+  security:
+    user:
+      name: admin
+      password: admin
+  cloud:
+    consul:
+      host: 192.168.40.152
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+## management config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+## log file path config
+logging:
+  config: classpath:logback-spring.xml

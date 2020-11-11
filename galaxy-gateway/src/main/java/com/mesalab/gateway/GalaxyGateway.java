@@ -1,13 +1,13 @@
-package com.mesalab.api.gateway;
+package com.mesalab.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GalaxyGatewayApp {
+public class GalaxyGateway {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(GalaxyGatewayApp.class);
+        SpringApplication.run(GalaxyGateway.class);
     }
 }

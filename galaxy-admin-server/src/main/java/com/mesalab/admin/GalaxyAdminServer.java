@@ -2,11 +2,11 @@ package com.mesalab.admin;
 
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @EnableAdminServer
-@SpringCloudApplication
+@SpringBootApplication
 public class GalaxyAdminServer {
 
     public static void main(String[] args) {
