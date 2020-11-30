@@ -87,7 +87,7 @@
                 </executions>
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
-                    <mainClass>com.mesalab.engine.GalaxyDataEngineApp</mainClass>
+                    <mainClass>com.mesalab.engine.GalaxyQueryEngine</mainClass>
                 </configuration>
             </plugin>
             <plugin>
