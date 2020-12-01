@@ -1,6 +1,6 @@
 ## application config
 server:
-  port: 8803
+  port: 9999
 spring:
   application:
     name: galaxy-gateway
@@ -13,6 +13,32 @@ spring:
         prefer-ip-address: true
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: galaxydataplatform
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Path=/metadata/**
+        - id: galaxydataplatform
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Path=/sys/**
+        - id: galaxydataplatform
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Path=/knowledge/**
+        - id: galaxydataplatform
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Query=query
+        - id: galaxydataplatform
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Query=protocol
 ## management config
 management:
   endpoints:
