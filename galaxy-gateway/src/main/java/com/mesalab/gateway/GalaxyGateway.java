@@ -12,4 +12,5 @@ public class GalaxyGateway {
     public static void main(String[] args) {
         SpringApplication.run(GalaxyGateway.class);
     }
+
 }
