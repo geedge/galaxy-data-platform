@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: galaxy-query-engine
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.44.3:3306/tsg-bifang?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 111111
   cloud:
     consul:
       host: 192.168.40.152
@@ -31,15 +36,18 @@ engine:
   defaultResultNum: 100000
 ## druid config
 druid:
+  address: 192.168.40.152:8082
   dbname: druid
   socketTimeOut: 60000
-  address: 192.168.40.152:8082
+  url: ${druid.address}/druid/v2/sql
   query: http://${druid.address}/druid/v2/sql
-## clickhouse config
+## clickhHouse configuration
 clickhouse:
   address: 192.168.44.12:8123
-  dbname: tsg_galaxy_v3
   query: http://${clickhouse.address}
+  url: jdbc:clickhouse://${clickhouse.address}
+  driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+  dbname: tsg_galaxy_v3
   realTimeAccount:
     username: tsg_query
     password: ceiec2018
@@ -48,3 +56,42 @@ clickhouse:
     username: tsg_report
     password: ceiec2019
     socketTimeOut: 21700000
+## hbase configuration
+hbase:
+  zookeeperQuorum: 192.168.44.12
+  zookeeperPropertyClientPort: 2181
+  zookeeperZnodeParent: /hbase
+  dbname: tsg
+  tableName: report_result
+  columnFamily: response
+  columnName: result
+  clientIpcPoolSize: 60
+  rpcTimeout: 60000
+## xxl-job-admin configuration
+xxl-job-admin:
+  url: http://192.168.44.12:8181/xxl-job-admin
+  userName: query
+  password: ceiec2018
+## arangoDB configuration
+arango:
+  server: http://192.168.44.12:8529
+  database: tsg_galaxy_v3
+  username: query
+  password: ceiec2018
+  jwturl: ${arango.server}/_db/${arango.database}/_open/auth
+  queryurl: ${arango.server}/_db/${arango.database}/_api/cursor
+  maxrows: 10000
+  socketTimeOut: 300000
+## http pool config
+http:
+  pool:
+    connect:
+      timeout: 30000
+    max:
+      connection: 500
+      per:
+        route: 200
+    request:
+      timeout: 10000
+    response:
+      timeout: 10000

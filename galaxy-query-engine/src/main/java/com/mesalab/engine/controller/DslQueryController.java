@@ -5,7 +5,7 @@ import com.mesalab.engine.common.pojo.BaseResult;
 import com.mesalab.engine.common.pojo.DSLObject;
 import com.mesalab.engine.common.util.BaseResultUtil;
 import com.mesalab.engine.component.DSLRouter;
-import com.mesalab.engine.component.DSLValidate;
+import com.mesalab.engine.component.DSLVerification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,13 +28,13 @@ public class DslQueryController {
     protected DSLRouter dslRouter;
 
     @Autowired
-    protected DSLValidate dslValidate;
+    protected DSLVerification verification;
 
     @PostMapping("query")
     public BaseResult query(@RequestBody DSLObject dslObject) {
         BaseResult baseResult;
         try {
-            dslValidate.executeValidate(dslObject);
+            verification.executeValidate(dslObject);
             baseResult = dslRouter.executeRouter(dslObject);
         } catch (BusinessException e) {
             return BaseResultUtil.failure(

@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @Description : DSL格式校验
  */
 @Component
-public class DSLValidate {
+public class DSLVerification {
 
     public static Pattern periodOfPT = Pattern.compile("PT(\\d+)[SMH]", Pattern.CASE_INSENSITIVE);
     public static Pattern periodOfP = Pattern.compile("P(\\d+)[DWMY]", Pattern.CASE_INSENSITIVE);
