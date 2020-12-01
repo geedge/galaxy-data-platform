@@ -208,7 +208,7 @@ public class MetadataServiceImpl implements MetadataService {
     public Map<String, Schema> getAllSchema() {
         try {
             String pathRoot = new File("").getCanonicalPath();
-            File fileDir = new File(pathRoot + "/config/avro");
+            File fileDir = new File(pathRoot + "/avro");
             return getSchemasByDirs(fileDir);
         } catch (Exception e) {
             log.error("Get Schema Error {}", e.getMessage());

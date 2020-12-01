@@ -10,3 +10,6 @@
 **Spring Boot Admin 2.3.0** https://codecentric.github.io/spring-boot-admin/2.3.0/
 ## 系统架构图
 ![系统架构图](images/architecture-v2.0.jpg)
+## 启动注意事项
+idea下启动项目需要设置一个启动参数,具体操作如下:
+Edit Configuration > Environment > Working directory: **$MODULE_DIR$**
