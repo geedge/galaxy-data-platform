@@ -14,16 +14,12 @@ spring:
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
       routes:
         - id: metadata
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/metadata/**
-        - id: testCase
+        - id: test
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/test/**
@@ -35,7 +31,7 @@ spring:
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/sys/**
-        - id: openApi
+        - id: open-api
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/open-api/**
@@ -43,11 +39,11 @@ spring:
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/knowledge/**
-        - id: sqlQuery
+        - id: query
           uri: lb://galaxy-query-engine
           predicates:
             - Query=query
-        - id: network
+        - id: protocol
           uri: lb://galaxy-query-engine
           predicates:
             - Query=protocol
