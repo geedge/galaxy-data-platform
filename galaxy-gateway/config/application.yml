@@ -19,31 +19,35 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: galaxy-data-platform
+        - id: metadata
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/metadata/**
-        - id: galaxy-data-platform
+        - id: testCase
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/test/**
-        - id: galaxy-data-platform
+        - id: monitor
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/monitor/**
-        - id: galaxy-data-platform
+        - id: sys
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/sys/**
-        - id: galaxy-data-platform
+        - id: openApi
+          uri: lb://galaxy-query-engine
+          predicates:
+            - Path=/open-api/**
+        - id: knowledge
           uri: lb://galaxy-query-engine
           predicates:
             - Path=/knowledge/**
-        - id: galaxy-data-platform
+        - id: sqlQuery
           uri: lb://galaxy-query-engine
           predicates:
             - Query=query
-        - id: galaxy-data-platform
+        - id: network
           uri: lb://galaxy-query-engine
           predicates:
             - Query=protocol

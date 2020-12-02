@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableDiscoveryClient
 @SpringBootApplication
+@EnableDiscoveryClient
 public class GalaxyQueryEngine implements WebMvcConfigurer {
 
     public static void main(String[] args) {
