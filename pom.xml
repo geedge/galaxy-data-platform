@@ -79,9 +79,9 @@
         <active.record.version>4.9.01</active.record.version>
         <starter.druid.version>1.1.22</starter.druid.version>
         <apache.calcite.version>1.22.0</apache.calcite.version>
-        <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
         <mysql.connector.version>8.0.18</mysql.connector.version>
-        <spring.cloud.version>Finchley.RELEASE</spring.cloud.version>
+        <spring.cloud.version>Hoxton.SR1</spring.cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
