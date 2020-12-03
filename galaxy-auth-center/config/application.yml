@@ -24,4 +24,4 @@ management:
       show-details: always
 ## log file path config
 logging:
-  config: classpath:logback-spring.xml
+  config: ./config/logback-spring.xml
