@@ -1,6 +1,6 @@
 ## application config
 server:
-  port: 8804
+  port: 8806
 spring:
   application:
     name: galaxy-query-engine
