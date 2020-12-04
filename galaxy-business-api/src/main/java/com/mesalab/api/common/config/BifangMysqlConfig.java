@@ -1,4 +1,4 @@
-package com.mesalab.api.common.configuration;
+package com.mesalab.api.common.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class BifangMysqlConfiguration {
+public class BifangMysqlConfig {
 
     @Value("${spring.datasource.url}")
     private String url;

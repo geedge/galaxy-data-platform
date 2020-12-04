@@ -1,4 +1,4 @@
-package com.mesalab.api.service;
+package com.mesalab.api.modules.demo.service;
 
 /**
  * @Date: 2020-12-03 09:47

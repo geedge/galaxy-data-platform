@@ -1,6 +1,6 @@
-package com.mesalab.api.controller;
+package com.mesalab.api.modules.demo.controller;
 
-import com.mesalab.api.service.DemoService;
+import com.mesalab.api.modules.demo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

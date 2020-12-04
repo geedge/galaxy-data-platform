@@ -1,6 +1,6 @@
-package com.mesalab.api.service.impl;
+package com.mesalab.api.modules.demo.service.impl;
 
-import com.mesalab.api.service.DemoService;
+import com.mesalab.api.modules.demo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

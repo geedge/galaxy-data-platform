@@ -1,6 +1,6 @@
-package com.mesalab.openapi.service;
+package com.mesalab.api.modules.openapi.service;
 
-import com.mesalab.common.base.BaseResult;
+import com.mesalab.api.common.base.BaseResult;
 
 /**
  * @Date: 2020-09-18 10:58

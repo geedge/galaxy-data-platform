@@ -1,7 +1,7 @@
-package com.mesalab.api.controller;
+package com.mesalab.api.modules.openapi.controller;
 
 import com.mesalab.api.common.base.BaseResult;
-import com.mesalab.api.service.OpenApiService;
+import com.mesalab.api.modules.openapi.service.OpenApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

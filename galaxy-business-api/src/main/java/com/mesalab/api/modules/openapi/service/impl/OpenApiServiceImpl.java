@@ -1,11 +1,11 @@
-package com.mesalab.api.service.impl;
+package com.mesalab.api.modules.openapi.service.impl;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.mesalab.api.common.base.BaseResult;
 import com.mesalab.api.common.base.BaseResultGenerator;
 import com.mesalab.api.common.utils.ReportCacheUtils;
-import com.mesalab.api.service.OpenApiService;
+import com.mesalab.api.modules.openapi.service.OpenApiService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

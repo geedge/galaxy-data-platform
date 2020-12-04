@@ -1,4 +1,4 @@
-package com.mesalab.qgw.monitor;
+package com.mesalab.api.health;
 
 import com.jfinal.plugin.activerecord.Db;
 import org.springframework.beans.factory.annotation.Value;
