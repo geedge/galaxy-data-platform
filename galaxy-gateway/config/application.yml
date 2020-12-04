@@ -32,7 +32,7 @@ spring:
           predicates:
             - Path=/sys/**
         - id: open-api
-          uri: lb://galaxy-query-engine
+          uri: lb://galaxy-business-api
           predicates:
             - Path=/open-api/**
         - id: knowledge
