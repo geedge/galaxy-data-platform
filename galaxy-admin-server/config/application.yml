@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: galaxy-admin-server
+  boot:
+    admin:
+      ui:
+        title: Galaxy Service Monitoring Center
+        brand: <span>Galaxy Data Platform</span>
   security:
     user:
       name: admin
@@ -15,6 +20,7 @@ spring:
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
+        register: false
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 ## management config
@@ -28,4 +34,4 @@ management:
       show-details: always
 ## log file path config
 logging:
-  config: classpath:logback-spring.xml
+  config: ./config/logback-spring.xml
