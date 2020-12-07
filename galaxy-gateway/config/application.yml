@@ -15,6 +15,10 @@ spring:
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
     gateway:
       routes:
+        - id: demo
+          uri: lb://galaxy-business-api
+          predicates:
+            - Path=/demo/**
         - id: metadata
           uri: lb://galaxy-query-engine
           predicates:

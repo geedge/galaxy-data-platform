@@ -19,7 +19,7 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public String demo() {
-        String url = "http://galaxy-auth-center/auth/index";
-        return restTemplate.getForObject(url,String.class);
+        String url = "http://galaxy-auth-center/index/info";
+        return restTemplate.getForObject(url, String.class);
     }
 }
