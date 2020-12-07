@@ -1,5 +1,6 @@
 package com.mesalab.api.modules.demo.service.impl;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.mesalab.api.common.base.BaseResult;
 import com.mesalab.api.modules.demo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public BaseResult sqlQuery() {
-        String url = "http://galaxy-query-engine/?query=select *  from sys_storage_log limit 10";
+        String storage = Db.getSql("storageLog");
+        String url = "http://galaxy-query-engine/?query=".concat(storage);
         return restTemplate.getForObject(url, BaseResult.class);
     }
 }
