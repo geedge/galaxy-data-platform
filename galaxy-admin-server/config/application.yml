@@ -9,7 +9,7 @@ spring:
       discovery:
         ignored-services: consul
       ui:
-        title: Galaxy Service Monitoring Center
+        title: Galaxy Data Platform
         brand: <span>Galaxy Data Platform</span>
   security:
     user:
