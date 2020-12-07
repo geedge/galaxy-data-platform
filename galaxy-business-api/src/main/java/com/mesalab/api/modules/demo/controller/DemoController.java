@@ -1,5 +1,6 @@
 package com.mesalab.api.modules.demo.controller;
 
+import com.mesalab.api.common.base.BaseResult;
 import com.mesalab.api.modules.demo.service.DemoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,13 @@ public class DemoController {
     @RequestMapping("index")
     public String index() {
         log.info(">>>applicationName:{}>>>Port:{}", applicationName, serverPort);
-        return demoService.demo();
+        return demoService.info();
     }
+
+    @RequestMapping("sqlQuery")
+    public BaseResult sqlQuery(){
+        return demoService.sqlQuery();
+    }
+
 
 }

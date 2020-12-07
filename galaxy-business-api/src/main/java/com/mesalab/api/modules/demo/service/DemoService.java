@@ -1,5 +1,7 @@
 package com.mesalab.api.modules.demo.service;
 
+import com.mesalab.api.common.base.BaseResult;
+
 /**
  * @Date: 2020-12-03 09:47
  * @Author : liuyongqiang
@@ -8,5 +10,8 @@ package com.mesalab.api.modules.demo.service;
  */
 public interface DemoService {
 
-    public String demo();
+    String info();
+
+    BaseResult sqlQuery();
+
 }
