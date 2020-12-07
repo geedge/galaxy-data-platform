@@ -6,6 +6,8 @@ spring:
     name: galaxy-admin-server
   boot:
     admin:
+      discovery:
+        ignored-services: consul
       ui:
         title: Galaxy Service Monitoring Center
         brand: <span>Galaxy Data Platform</span>
@@ -18,11 +20,7 @@ spring:
       host: 192.168.44.12
       port: 8500
       discovery:
-        service-name: ${spring.application.name}
-        prefer-ip-address: true
         register: false
-        health-check-path: /actuator/health
-        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 ## management config
 management:
   endpoints:
