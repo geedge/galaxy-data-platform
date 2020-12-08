@@ -58,7 +58,7 @@ logging:
 ## mybatis resources config
 mybatis:
   mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
-## application config
+## galaxy-job config
 galaxy:
   job:
     accessToken: ''
