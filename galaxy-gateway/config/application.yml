@@ -39,6 +39,10 @@ spring:
           uri: lb://galaxy-business-api
           predicates:
             - Path=/open-api/**
+        - id: traffic
+          uri: lb://galaxy-business-api
+          predicates:
+            - Path=/traffic/**
         - id: knowledge
           uri: lb://galaxy-query-engine
           predicates:
