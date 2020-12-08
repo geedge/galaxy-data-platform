@@ -1,9 +1,39 @@
 ## application config
 server:
   port: 8804
+  servlet:
+    context-path: /galaxy-job-admin
 spring:
   application:
     name: galaxy-job-admin
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 900000
+      maximum-pool-size: 100
+      minimum-idle: 10
+      pool-name: HikariCP
+  freemarker:
+    charset: UTF-8
+    request-context-attribute: request
+    settings:
+      number_format: 0.##########
+    suffix: .ftl
+    templateLoaderPath: classpath:/templates/
+  mvc:
+    servlet:
+      load-on-startup: 0
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
   cloud:
     consul:
       host: 192.168.44.12
@@ -11,7 +41,7 @@ spring:
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
-        health-check-path: /actuator/health
+        health-check-path: /galaxy-job-admin/actuator/health
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 ## management config
 management:
@@ -25,3 +55,17 @@ management:
 ## log file path config
 logging:
   config: ./config/logback-spring.xml
+## mybatis resources config
+mybatis:
+  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
+## application config
+galaxy:
+  job:
+    accessToken: ''
+    i18n: zh_CN
+    logretentiondays: 30
+    triggerpool:
+      fast:
+        max: 200
+      slow:
+        max: 100
