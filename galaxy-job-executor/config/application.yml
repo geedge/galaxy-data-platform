@@ -15,8 +15,9 @@ spring:
       discovery:
         service-name: ${spring.application.name}
         prefer-ip-address: true
-        health-check-path: /galaxy-job-executor/actuator/health
+        health-check-path: /${spring.application.name}/actuator/health
         instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+        tags: management.context-path=/${spring.application.name}/actuator
 ## management config
 management:
   endpoints:
