@@ -1,0 +1,160 @@
+package com.mesalab.report.configuration;
+
+import com.mesalab.report.util.Logs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+/**
+ * Created by wk1 on 2019/5/15.
+ */
+@Component
+@ConfigurationProperties(prefix = "http")
+public class HttpClientPool {
+
+    private Integer maxTotal;
+
+    private Integer defaultMaxPerRoute;
+
+    private Integer connectTimeout;
+
+    private Integer connectionRequestTimeout;
+
+    public static Integer socketTimeout;
+
+    private boolean staleConnectionCheckEnabled;
+
+    private Integer socketTimeoutShort;
+
+
+    public void setMaxTotal(Integer maxTotal) {
+        this.maxTotal = maxTotal;
+    }
+
+    public void setDefaultMaxPerRoute(Integer defaultMaxPerRoute) {
+        this.defaultMaxPerRoute = defaultMaxPerRoute;
+    }
+
+    public void setConnectTimeout(Integer connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public void setConnectionRequestTimeout(Integer connectionRequestTimeout) {
+        this.connectionRequestTimeout = connectionRequestTimeout;
+    }
+
+    public void setSocketTimeout(Integer socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
+
+    public void setStaleConnectionCheckEnabled(boolean staleConnectionCheckEnabled) {
+        this.staleConnectionCheckEnabled = staleConnectionCheckEnabled;
+    }
+
+    public void setSocketTimeoutShort(Integer socketTimeoutShort) {
+        this.socketTimeoutShort = socketTimeoutShort;
+    }
+
+    /**
+     * 首先实例化一个连接池管理器，设置最大连接数、并发连接数
+     *
+     * @return
+     */
+    @Bean(name = "httpClientConnectionManager")
+    public PoolingHttpClientConnectionManager getHttpClientConnectionManager() {
+        PoolingHttpClientConnectionManager httpClientConnectionManager = new PoolingHttpClientConnectionManager();
+        //最大连接数
+        httpClientConnectionManager.setMaxTotal(maxTotal);
+        //并发数
+        httpClientConnectionManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
+        return httpClientConnectionManager;
+    }
+
+    /**
+     * 实例化连接池，设置连接池管理器。
+     * 这里需要以参数形式注入上面实例化的连接池管理器
+     *
+     * @param httpClientConnectionManager
+     * @return
+     */
+    @Bean(name = "httpClientBuilder")
+    public HttpClientBuilder getHttpClientBuilder(@Qualifier("httpClientConnectionManager") PoolingHttpClientConnectionManager httpClientConnectionManager) {
+
+        //HttpClientBuilder中的构造方法被protected修饰，所以这里不能直接使用new来实例化一个HttpClientBuilder，可以使用HttpClientBuilder提供的静态方法create()来获取HttpClientBuilder对象
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+        httpClientBuilder.setConnectionManager(httpClientConnectionManager);
+
+        return httpClientBuilder;
+    }
+
+    /**
+     * 注入连接池，用于获取httpClient
+     *
+     * @param httpClientBuilder
+     * @return
+     */
+    @Bean
+    public CloseableHttpClient getCloseableHttpClient(@Qualifier("httpClientBuilder") HttpClientBuilder httpClientBuilder) {
+        return httpClientBuilder.build();
+    }
+
+    /**
+     * Builder是RequestConfig的一个内部类
+     * 通过RequestConfig的custom方法来获取到一个Builder对象
+     * 设置builder的连接信息
+     * 这里还可以设置proxy，cookieSpec等属性。有需要的话可以在此设置
+     *
+     * @return
+     */
+    @Bean(name = "builder")
+    public RequestConfig.Builder getBuilder() {
+        RequestConfig.Builder builder = RequestConfig.custom();
+        return builder.setConnectTimeout(connectTimeout)
+                .setConnectionRequestTimeout(connectionRequestTimeout)
+                .setSocketTimeout(socketTimeout)
+                .setStaleConnectionCheckEnabled(staleConnectionCheckEnabled);
+    }
+
+
+
+    @Bean(name = "builderShort")
+    public RequestConfig.Builder getBuilderShort() {
+        RequestConfig.Builder builder = RequestConfig.custom();
+        return builder.setConnectTimeout(connectTimeout)
+                .setConnectionRequestTimeout(connectionRequestTimeout)
+                .setSocketTimeout(socketTimeoutShort)
+                .setStaleConnectionCheckEnabled(staleConnectionCheckEnabled);
+    }
+    /**
+     * 使用builder构建一个RequestConfig对象
+     *
+     * @param builder
+     * @return
+     */
+    @Bean(name = "RequestLongConfig")
+    public RequestConfig getRequestConfig(@Qualifier("builder") RequestConfig.Builder builder) {
+        Logs.debug("httpclient  success");
+        return builder.build();
+    }
+
+    /**
+     * @author LBQ
+     * @version 1.0.0
+     * @ClassName HbasePool
+     * @Description Hbase连接池
+     * @Date 2018年5月31日 下午10:22:06
+     */
+    @Bean(name = "RequestShortConfig")
+    public RequestConfig getRequestShortConfig(@Qualifier("builderShort") RequestConfig.Builder builder) {
+        Logs.debug("httpclientshort  success");
+        return builder.build();
+    }
+
+}
+

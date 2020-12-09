@@ -1,0 +1,127 @@
+package com.mesalab.report.controller;
+
+import com.mesalab.report.bean.JobEntity;
+import com.mesalab.report.configuration.GlobelConfig;
+import com.mesalab.report.configuration.HttpClientPool;
+import com.mesalab.report.service.ExcuteProcessService;
+import com.mesalab.report.service.ExcuteService;
+import com.mesalab.report.service.MysqlService;
+import com.mesalab.report.service.ZkService;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * @author wk1
+ * @date 2020/1/8
+ */
+@Component
+@EnableScheduling
+public class ScheduledResultController {
+
+    private static Logger logger = LoggerFactory.getLogger(ScheduledResultController.class);
+
+    protected static ExecutorService pool = Executors.newFixedThreadPool(30);
+
+
+    @Autowired
+    private MysqlService ms;
+    @Autowired
+    private ExcuteService es;
+    @Autowired
+    private ExcuteProcessService eps;
+    @Autowired
+    private ZkService zs;
+
+
+    @Scheduled(cron = "${scan.result.scheduled.plan}")
+    public void getExcuteResult() {
+        try {
+            if (zs.isMaster()) {
+                logger.info("开始查看结果");
+                //先查询数据库是否有异常状态任务，killquery
+                List<JobEntity> joblist = ms.getJobForExcute();
+                for (JobEntity jobEntity : joblist) {
+                    String sql = jobEntity.getQuerySql().trim();
+                    sql = sql.replace("$exe_time", "toDateTime('" + jobEntity.getIssuedTime().trim() + "')");
+                    sql = sql.replace("$start_time", "toDateTime('" + jobEntity.getStartTime().trim() + "')");
+                    sql = sql.replace("$end_time", "toDateTime('" + jobEntity.getEndTime().trim() + "')");
+                    String queryid = DigestUtils.md5Hex(jobEntity.getResultId() + sql);
+                    jobEntity.setQuery_id(queryid);
+
+                    if (jobEntity.getIsValid() == 0) {
+                        eps.killQuery(jobEntity);
+                        GlobelConfig.mapresult.get(jobEntity.getQuery_id()).setIsValid(0);
+                    } else if (!GlobelConfig.mapresult.containsKey(jobEntity.getQuery_id())) {
+                        eps.reSet(jobEntity);
+                    }
+                    if (GlobelConfig.mapresult.containsKey(jobEntity.getQuery_id())) {
+                        if (jobEntity.getIsValid() == 0) {
+                            eps.killQuery(jobEntity);
+                            GlobelConfig.mapresult.get(jobEntity.getQuery_id()).setIsValid(0);
+                        }
+                    } else {
+                        eps.reSet(jobEntity);
+                    }
+
+                }
+                //遍历内存中的任务对状态1的更新进度，其他更新数据库的状态
+                for (Map.Entry<String, JobEntity> entry : GlobelConfig.mapresult.entrySet()) {
+                    logger.info("key = " + entry.getKey() + ", value = " + entry.getValue().getStatus());
+                    long currentTime = System.currentTimeMillis();
+                    long excutetime = currentTime - entry.getValue().getBeginTime();
+                    logger.info("excute time=" + excutetime + "ttl_time=" + HttpClientPool.socketTimeout);
+                    if (entry.getValue().getStatus() == 1 && excutetime > HttpClientPool.socketTimeout + 1) {
+                        entry.getValue().setStatus(2);
+                        entry.getValue().setExcute_status(500001);
+                        eps.killQuery(entry.getValue());
+                        eps.updateResultMessage(entry.getValue());
+                    } else {
+                        if (entry.getValue().getStatus() == 1) {
+                            eps.updateProcessMessage(entry.getValue());
+                        } else {
+                            eps.updateResultMessage(entry.getValue());
+                        }
+                    }
+                }
+                int rows = GlobelConfig.job_thread - GlobelConfig.mapresult.size();
+                if (rows > 0) {
+                    List<JobEntity> jobs = ms.getJobTask(rows);
+                    for (JobEntity job : jobs) {
+                        logger.info("开始执行任务");
+                        long begintime = System.currentTimeMillis();
+                        job.setBeginTime(begintime);
+                        pool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                es.excuteCkTask(job);
+                            }
+                        });
+                    }
+                } else {
+                    logger.info("无待执行任务");
+                }
+            } else {
+                if (GlobelConfig.mapresult.size() > 0) {
+                    for (Map.Entry<String, JobEntity> entry : GlobelConfig.mapresult.entrySet()) {
+                        logger.info("key = " + entry.getKey() + ", value = " + entry.getValue().getStatus());
+                        eps.killQuery(entry.getValue());
+                    }
+                    GlobelConfig.mapresult.clear();
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+    }
+
+}

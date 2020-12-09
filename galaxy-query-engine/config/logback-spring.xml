@@ -38,6 +38,9 @@
             <level>DEBUG</level>
         </filter>
     </appender>
+
+    <logger name="org.apache.hadoop.util.Shell" level="ERROR"/>
+
     <root level="info">
         <appender-ref ref="ALL_FILE" />
         <appender-ref ref="STDOUT" />

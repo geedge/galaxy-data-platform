@@ -1,0 +1,58 @@
+package com.mesalab.report.service.impl;
+
+import com.mesalab.report.bean.HttpResult;
+import com.mesalab.report.bean.JobEntity;
+import com.mesalab.report.configuration.HbaseProperties;
+import com.mesalab.report.service.HbaseService;
+import com.mesalab.report.util.Logs;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+/**
+ * Created by wk1 on 2019/5/15.
+ */
+
+@Service
+public class HbaseServiceImpl implements HbaseService {
+
+    @Autowired
+    private Connection hbaseConnection;
+
+    @Autowired
+    private HbaseProperties hbproperties;
+
+    @Override
+    public Boolean put(JobEntity jobEntity) throws Exception {
+
+
+        Boolean status = false;
+        try(Table table =hbaseConnection.getTable(TableName.valueOf(hbproperties.getTable()))) {
+            Put put = new Put(Bytes.toBytes(jobEntity.getQuery_id()));
+            put.addColumn(Bytes.toBytes("response"), Bytes.toBytes("result"), Bytes.toBytes(jobEntity.getResult()));
+            put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("result_id"), Bytes.toBytes(jobEntity.getResultId()));
+
+            put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("excute_sql"), Bytes.toBytes(jobEntity.getQuerySql()));
+            //put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("format_sql"), Bytes.toBytes(jobEntity.getFormatSql()));
+
+            if(jobEntity.getExcuteRow()!=null){
+                put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("read_rows"), Bytes.toBytes(jobEntity.getExcuteRow()));
+            }
+            if(jobEntity.getQuery_duration_ms()!=null){
+            put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("query_duration_ms"), Bytes.toBytes(jobEntity.getQuery_duration_ms()));
+            }
+            if(jobEntity.getMemory_usage()!=null){
+                put.addColumn(Bytes.toBytes("detail"), Bytes.toBytes("memory_usage"), Bytes.toBytes(jobEntity.getMemory_usage()));
+            }
+            table.put(put);
+            status =true;
+        }catch(Exception e) {
+            Logs.error(e.toString());
+        }
+        return status;
+    }
+
+}

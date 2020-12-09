@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mesalab.report.mapper.ReportResultMapper" >
+  <resultMap type="com.mesalab.report.bean.JobEntity" id="BaseResultMap">
+    <id property="resultId" column="result_id"/>
+    <result property="resultName" column="result_name"/>
+    <result property="startTime" column="start_time"/>
+    <result property="endTime" column="end_time"/>
+    <result property="querySql" column="query_sql"/>
+    <result property="status" column="status"/>
+    <result property="excuteTime" column="excute_time"/>
+    <result property="excuteRow" column="excute_row"/>
+    <result property="excuteProcess" column="excute_process"/>
+    <result property="excuteDetail" column="excute_detail"/>
+    <result property="opTime" column="op_time"/>
+    <result property="issuedTime" column="issued_time"/>
+    <result property="resultRows" column="result_rows"/>
+    <result property="isValid" column="is_valid"/>
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    result_id, result_name, DATE_FORMAT(start_time,'%Y-%m-%d %H:%i:%s') as start_time,DATE_FORMAT(end_time,'%Y-%m-%d %H:%i:%s') as end_time, query_sql, status, excute_time,
+    excute_row, excute_process, excute_detail, is_send_notice,DATE_FORMAT(op_time,'%Y-%m-%d %H:%i:%s') as op_time,DATE_FORMAT(issued_time,'%Y-%m-%d %H:%i:%s') as issued_time,result_rows,is_valid
+  </sql>
+  <select id="getJobForExcute" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from report_result
+    where status = 1  order by end_time  limit 10
+  </select>
+
+  <select id="getJobTask" resultMap="BaseResultMap" parameterType="hashmap">
+    select
+    <include refid="Base_Column_List" />
+    from report_result
+    where status = 0 and is_valid = 1 and end_time &lt; #{endtime} order by end_time limit ${rows}
+  </select>
+
+  <update id="updateProcesses" parameterType="com.mesalab.report.bean.JobEntity" >
+    update report_result
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="excuteTime != null" >
+        excute_time = #{excuteTime,jdbcType=INTEGER},
+      </if>
+      <if test="excuteRow != null" >
+        excute_row = #{excuteRow,jdbcType=BIGINT},
+      </if>
+      <if test="excuteProcess != null" >
+        excute_process = #{excuteProcess,jdbcType=INTEGER},
+      </if>
+      <if test="excuteDetail != null" >
+        excute_detail = #{excuteDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null" >
+        op_time = #{opTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resultRows != null" >
+        result_rows = #{resultRows,jdbcType=INTEGER},
+      </if>
+    </set>
+    where result_id = #{resultId,jdbcType=INTEGER}
+  </update>
+
+
+
+
+
+  <update id="updateStatue" parameterType="com.mesalab.report.bean.JobEntity" >
+    update report_result
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="excuteDetail != null" >
+        excute_detail = #{excuteDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null" >
+        op_time = #{opTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resultRows != null" >
+        result_rows = #{resultRows,jdbcType=INTEGER},
+      </if>
+    </set>
+    where result_id = #{resultId,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="getJobCount"  resultType="map" parameterType="hashmap">
+    SELECT (SELECT COUNT(1) FROM report_result where status = 0 and is_valid = 1 and end_time &lt; #{endtime}) as queueNum,
+    (SELECT COUNT(1) FROM report_result where status = 1 and is_valid = 1 ) as excuteingNum,
+    (SELECT COUNT(1) FROM report_result where status = 2 and op_time > #{optime} ) as todaySuccessNum,
+    (SELECT COUNT(1) FROM report_result where status > 2 and op_time > #{optime} ) as todayErrorNum
+  </select>
+</mapper>
