@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <!--nexus中央仓库-->
-    <repositories>
+   <repositories>
         <repository>
             <id>nexus</id>
             <name>Team Nexus Repository</name>
@@ -64,6 +64,7 @@
         <zdjizhi.version>1.0.4</zdjizhi.version>
         <jakarta.version>3.0.0</jakarta.version>
         <commonsio.version>2.2</commonsio.version>
+        <fastjson.version>1.2.69</fastjson.version>
         <joda.time.version>2.6</joda.time.version>
         <jsqlparser.version>3.0</jsqlparser.version>
         <jsqlparser.version>3.0</jsqlparser.version>
@@ -79,6 +80,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <commons.lang3.version>3.5</commons.lang3.version>
         <hbase.client.version>2.2.3</hbase.client.version>
+        <hadoop.client.version>2.7.1</hadoop.client.version>
         <calcite.core.version>1.22.0</calcite.core.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
         <active.record.version>4.9.01</active.record.version>

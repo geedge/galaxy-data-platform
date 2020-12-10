@@ -1,0 +1,36 @@
+package com.mesalab.hos.entity.bucketlist;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType(propOrder = {"id", "displayName"})
+public class BucketOwner {
+    private String displayName;
+    private String id;
+
+    public BucketOwner() {
+    }
+
+    public BucketOwner(String displayName, String id) {
+        this.displayName = displayName;
+        this.id = id;
+    }
+
+    @XmlElement(name = "DisplayName")
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @XmlElement(name = "ID")
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+}

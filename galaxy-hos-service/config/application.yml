@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: galaxy-hos-service
+  servlet: #设置上传文件大小的最大值
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   cloud:
     consul:
       host: 192.168.44.12
@@ -22,6 +26,42 @@ management:
   endpoint:
     health:
       show-details: always
+## tomcat config
+tomcat:
+  cacheMaxSize: 10000000 #tomcat缓存大小，单位KB系统默认10M，配置10g
 ## log file path config
 logging:
   config: ./config/logback-spring.xml
+## auth config
+auth:
+  open: 0 #是否打开验证，0打开，打开需要使用S3身份验证或者token访问服务
+## hbase config
+hbase:
+  client_keyvalue_maxsize: 1024000000
+  client_retries_number: 1
+  client_write_buffer: 10485760
+  connect_pool: 300
+  filename_head: 1,2,3,4,5,6,7,8,9,a,b,c,d,e,f
+  filename_index_table_prefix: index_filename_
+  hadoopConf: /home/tsg/galaxy/hadoop-2.7.1/etc/hadoop/ #hadoop配置文件所在文件夹单机环境不需要
+  hbasePath: /hbase/hbase-2.2.3 #获取文件大小的目录
+  namenodes: 192.168.44.11,192.168.44.14
+  partfile_index_table_prefix: index_partfile_
+  region_start_key: 1,2,3,4,5,6,7,8,9,a,b,c,d,e,f #创建表预分区时的分区，为空则不分区
+  rpc_timeout: 100000
+  standone: 1 #1是集群0是单机主要针对存储配额获取方式
+  time_index_table_prefix: index_time_
+  zookeeper_property_clientPort: 2181
+  zookeeper_quorum: 192.168.44.11
+  zookeeper_znode_parent: /hbase
+## hos config
+hos:
+  deleteMultipleNumber: 1000 #批量删除对象的最大数量
+  fileSizeValve: 100000
+  maxPartNumber: 1000 #分块上传的最大分块数
+  maxPoolNumber: 600 #上传文件线程数
+  maxPosition: 10000 #追加上传的最大次数
+  maxResultLimit: 10000 #获取对象列表等操作的最大值
+  metaHeader: x-hos-meta-message #存放文件元数据的请求头
+  simple: 0 #是否打开对象列表查询功能，1打开
+  users: default #用户白名单，分割
