@@ -4,7 +4,7 @@ import com.google.common.cache.CacheStats;
 import com.mesalab.common.utils.QueryCacheUtils;
 import com.mesalab.common.utils.JsonMapper;
 import com.mesalab.qgw.model.api.CachedSubmitCheck;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;

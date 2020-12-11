@@ -1,7 +1,7 @@
 package com.mesalab.common.configuration;
 
 import com.mesalab.qgw.model.api.ClickHouseHttpSource;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

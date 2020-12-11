@@ -22,7 +22,7 @@ public class SchemaBase implements Serializable {
     private List<Map> fields;
 
     public String getNamespace() {
-        return namespace = "com.zdjizhi";
+        return namespace = "com.mesalab.tool";
     }
 
     public String getType() {

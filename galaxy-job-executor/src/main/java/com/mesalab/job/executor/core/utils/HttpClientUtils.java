@@ -2,7 +2,7 @@ package com.mesalab.job.executor.core.utils;
 
 import com.mesalab.job.executor.core.config.HttpConfig;
 import com.mesalab.job.executor.exception.BusinessException;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;

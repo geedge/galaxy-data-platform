@@ -16,9 +16,9 @@ import com.mesalab.qgw.model.job.StorageDeletionInfo;
 import com.mesalab.qgw.model.job.XxlJobInfo;
 import com.mesalab.qgw.service.ApiService;
 import com.mesalab.qgw.service.SystemService;
-import com.zdjizhi.utils.DateUtils;
-import com.zdjizhi.utils.Encodes;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.DateUtils;
+import com.mesalab.tool.utils.Encodes;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -280,7 +280,7 @@ public class SystemServiceImpl implements SystemService {
         StorageDeletionInfo storageDeletionInfo = new StorageDeletionInfo();
         Map trafficDate = getDataByHandler(jobHandlerValue);
         XxlJobInfo xxlJobInfo = mapToBean(trafficDate, XxlJobInfo.class);
-        Map executorParam = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(xxlJobInfo.getExecutorParam(), Map.class);
+        Map executorParam = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(xxlJobInfo.getExecutorParam(), Map.class);
         Object maxDays = executorParam.get("maxdays");
         storageDeletionInfo.setLogType(logType);
         storageDeletionInfo.setMaxDays(Integer.parseInt(String.valueOf(maxDays)));
@@ -336,7 +336,7 @@ public class SystemServiceImpl implements SystemService {
             baseResult = BaseResultGenerator.failure(HttpStatus.SC_INTERNAL_SERVER_ERROR, "服务繁忙，请联系调度平台方！");
         } else {
             if (resultMap.get("status").equals(String.valueOf(HttpStatus.SC_OK))) {
-                Map result = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(String.valueOf(resultMap.get("result")), Map.class);
+                Map result = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(String.valueOf(resultMap.get("result")), Map.class);
                 if (result.get("code").equals(HttpStatus.SC_OK)) {
                     baseResult = BaseResultGenerator.success("ok", null);
                 } else if (result.get("code").equals(HttpStatus.SC_LOCKED)) {

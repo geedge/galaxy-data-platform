@@ -2,7 +2,7 @@ package com.mesalab.knowledge.entity;
 
 import com.google.common.base.CharMatcher;
 import com.mesalab.knowledge.enums.MatchEnum;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.Data;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.util.ObjectUtils;

@@ -12,8 +12,8 @@ import com.mesalab.common.utils.JsonMapper;
 import com.mesalab.common.utils.SchemaCacheUtils;
 import com.mesalab.knowledge.common.utils.HttpConfig;
 import com.mesalab.qgw.model.api.ClickHouseHttpSource;
-import com.zdjizhi.utils.Encodes;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.Encodes;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.JsonProperties;
 import org.apache.avro.Schema;
@@ -456,7 +456,7 @@ public class TestSqlServiceImpl {
         Iterator<String> iterator = name.iterator();
         while (iterator.hasNext()) {//遍历表,以Avro为基础
             String tableName = iterator.next();
-            Map resultMap = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(String.valueOf(druidSchemaInfo.get(tableName)), Map.class);
+            Map resultMap = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(String.valueOf(druidSchemaInfo.get(tableName)), Map.class);
             if (resultMap == null) {
                 throw new BusinessException(ResultStatusEnum.FAIL.getCode(), "schema未注册此表: " + tableName, null);
             }
@@ -498,7 +498,7 @@ public class TestSqlServiceImpl {
         Iterator<String> iterator = name.iterator();
         while (iterator.hasNext()) {//遍历表,以Avro为基础
             String tableName = iterator.next();
-            Map resultMap = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(String.valueOf(ckSchemaInfo.get(tableName)), Map.class);
+            Map resultMap = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(String.valueOf(ckSchemaInfo.get(tableName)), Map.class);
             if (resultMap == null) {
                 throw new BusinessException(ResultStatusEnum.FAIL.getCode(), "schema未注册此表: " + tableName, null);
             }
@@ -587,7 +587,7 @@ public class TestSqlServiceImpl {
         Iterator<String> iterator = name.iterator();
         while (iterator.hasNext()) {//遍历表
             String tableName = iterator.next();
-            Map resultMap = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(String.valueOf(ckeckSchemaInfo.get(tableName)), Map.class);
+            Map resultMap = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(String.valueOf(ckeckSchemaInfo.get(tableName)), Map.class);
             if (resultMap == null) {
                 throw new BusinessException(ResultStatusEnum.FAIL.getCode(), "schema未注册此表: " + tableName, null);
             }
@@ -597,7 +597,7 @@ public class TestSqlServiceImpl {
             while (fieldsIterator.hasNext()) {
                 Map next = fieldsIterator.next();
                 try {
-                    mapDoc = (Map) com.zdjizhi.utils.JsonMapper.fromJsonString(String.valueOf(next.get("doc")), Map.class);
+                    mapDoc = (Map) com.mesalab.tool.utils.JsonMapper.fromJsonString(String.valueOf(next.get("doc")), Map.class);
                 } catch (Exception ex) {
                     log.error("该字段的 doc 为非JSON字符串，不需类型转换");
                     String str = String.format("%s.avro中doc非json格式字段%s", tableName, next.get("name"));

@@ -2,7 +2,7 @@ package com.mesalab.qgw.model.protocol;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

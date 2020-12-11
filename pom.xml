@@ -7,29 +7,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!--nexus中央仓库-->
-   <repositories>
-        <repository>
-            <id>nexus</id>
-            <name>Team Nexus Repository</name>
-            <url>http://192.168.40.125:8099/content/groups/public</url>
-        </repository>
-    </repositories>
-
-    <!--定义snapshots库和releases库的nexus地址-->
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://192.168.40.125:8099/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>Nexus Snapshot Repository</name>
-            <url>http://192.168.40.125:8099/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <modules>
         <!--查询网关-->
         <module>galaxy-gateway</module>
@@ -51,21 +28,22 @@
         <module>galaxy-job-core</module>
         <!--数据查询引擎-->
         <module>galaxy-query-engine</module>
+        <!--核心工具类库-->
+        <module>galaxy-tool</module>
     </modules>
 
     <properties>
         <avro.version>1.9.1</avro.version>
         <nutz.version>1.r.65</nutz.version>
         <guava.version>23.0</guava.version>
-        <groovy.version>2.5.9</groovy.version>
         <log4j.version>2.10.0</log4j.version>
+        <groovy.version>2.5.9</groovy.version>
         <hutool.version>5.4.0</hutool.version>
         <lombok.version>1.18.6</lombok.version>
-        <zdjizhi.version>1.0.4</zdjizhi.version>
         <jakarta.version>3.0.0</jakarta.version>
         <commonsio.version>2.2</commonsio.version>
-        <fastjson.version>1.2.69</fastjson.version>
         <joda.time.version>2.6</joda.time.version>
+        <fastjson.version>1.2.69</fastjson.version>
         <jsqlparser.version>3.0</jsqlparser.version>
         <jsqlparser.version>3.0</jsqlparser.version>
         <httpclient.version>4.5.6</httpclient.version>
@@ -80,9 +58,10 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <commons.lang3.version>3.5</commons.lang3.version>
         <hbase.client.version>2.2.3</hbase.client.version>
-        <hadoop.client.version>2.7.1</hadoop.client.version>
         <calcite.core.version>1.22.0</calcite.core.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
+        <hadoop.client.version>2.7.1</hadoop.client.version>
+        <aws-java-sdk.version>1.11.781</aws-java-sdk.version>
         <active.record.version>4.9.01</active.record.version>
         <starter.druid.version>1.1.22</starter.druid.version>
         <spring.cloud.version>Hoxton.SR1</spring.cloud.version>

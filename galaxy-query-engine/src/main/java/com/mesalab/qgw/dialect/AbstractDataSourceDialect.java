@@ -4,8 +4,8 @@ package com.mesalab.qgw.dialect;
 import com.mesalab.common.base.BaseResult;
 import com.mesalab.common.base.BaseResultGenerator;
 import com.mesalab.qgw.model.api.ApiParam;
-import com.zdjizhi.utils.Encodes;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.Encodes;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.Data;
 import org.apache.calcite.rel.core.TableScan;
 

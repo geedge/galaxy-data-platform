@@ -6,7 +6,7 @@ import com.mesalab.knowledge.common.config.ArangoConfig;
 import com.mesalab.knowledge.common.utils.Constant;
 import com.mesalab.knowledge.common.utils.JwtCache;
 import com.mesalab.qgw.service.impl.HttpClientService;
-import com.zdjizhi.utils.JsonMapper;
+import com.mesalab.tool.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;

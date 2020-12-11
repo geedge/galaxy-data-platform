@@ -7,7 +7,7 @@ import com.mesalab.knowledge.common.utils.HttpConfig;
 import com.mesalab.qgw.model.api.ClickHouseHttpSource;
 import com.mesalab.qgw.model.api.DruidIoHttpSource;
 import com.mesalab.qgw.service.impl.HttpClientService;
-import com.zdjizhi.utils.Encodes;
+import com.mesalab.tool.utils.Encodes;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;

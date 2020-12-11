@@ -14,7 +14,7 @@ import com.mesalab.job.core.biz.model.ReturnT;
 import com.mesalab.job.core.handler.IJobHandler;
 import com.mesalab.job.core.handler.annotation.XxlJob;
 import com.mesalab.job.core.log.XxlJobLogger;
-import com.zdjizhi.utils.*;
+import com.mesalab.tool.utils.*;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;

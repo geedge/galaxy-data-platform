@@ -1,0 +1,58 @@
+<html>
+<body>
+<p>
+提供对数据加密、界面工具类.
+    附证书生成命令：
+    keytool生成证书
+    keytool -genkeypair -keyalg RSA -keysize 2048 -sigalg SHA1withRSA -validity 360 -alias www.dominic.com -keystore dominic.keystore
+    导出数字证书
+    keytool -exportcert -alias www.dominic.com -keystore dominic.keystore -file dominic.cer -rfc
+    打印数字证书
+    keytool -printcert -file dominic.cer
+    这里是自制证书，如果需要权威机构签发，需要导出证书申请文件由第三方签发
+
+    openssl证书创建
+
+    根证书构建命令？
+    echo 构建随机数 private/.rand
+    openssl rand -out private/.rand 1000
+    echo 构建根证书私钥 private/ca.key.pem
+    openssl genrsa -aes256 -out private/ca.key.pem 2048
+    echo 生成根证书签发申请 private/ca.csr
+    openssl req -new -key private/ca.key.pem -out private/ca.csr -subj "/C=CN/ST=BJ/L=BJ/O=dominic/OU=dominic/CN=www.dominic.com"
+    echo 签发根证书 private/ca.cer
+    openssl x509 -req -days 10000 -sha1 -extensions v3_ca -signkey private/ca.key.pem -in private/ca.csr -out certs/ca.cer
+    echo 根证书转换 private/ca.p12
+    openssl pkcs12 -export -cacerts inkey private/ca.key.pem -in private/ca.csr -out certs/ca.cer
+
+    服务器证书构建步骤命令?
+    (1)echo 构建服务器私钥 private/server.key.pem
+    (2)openssl genrsa -aes256 -out private/server.key.pem 2048
+    echo 生成服务器证书签发申请 private/server.csr
+    (3)openssl req -new -key private/server.key.pem -out private/server.csr -subj "/C=CN/ST=BJ/L=BJ/O=dominic/OU=dominic/CN=www.dominic.com"
+    echo 签发服务器证书 private/server.cer
+    openssl x509 -req -days 3650 -sha1 -extensions v3_req -CA certs/ca.cer -CAkey private/ca.key.pem -CAserial ca.srl -CAcreateserial -in private/server.csr -out certs/server.cer
+    echo 服务器证书转换 private/server.p12
+    openssl pkcs12 -export -clcerts -inkey private/server.key.pem -in certs/server.cer -out certs/server.p12
+
+    客户证书构建命令？
+    echo 构建客户私钥 private/client.key.pem
+    openssl genrsa -aes256 -out private/client.key.pem 2048
+    echo 生成服务器证书签发申请 private/client.csr
+    openssl req -new -key private/client.key.pem -out private/client.csr -subj "/C=CN/ST=BJ/L=BJ/O=dominic/OU=dominic/CN=www.dominic.com"
+    echo 签发客户证书 private/server.cer
+    openssl ca -days 3650 -in private/client.csr -out certs/client.cer -cert certs/ca.cer -keyfile private/ca.key.pem
+    echo 客户证书转换 certs/client.p12
+    openssl pkcs12 -export -inkey private/client.key.pem -in certs/client.cer -out certs/client.p12
+<p>
+包括：
+<ul>
+<li><code>AESUtil</code> - AES对称加密算法,组件类.</li>
+<li><code>DesFileUtil</code> - 3des加密算法，针对文件进行加密的工具类.</li>
+<li><code>DesUtil</code> - 3des加密算法，针对消息进行加密的工具类.</li>
+<li><code>RSACoder</code> - RSA非对称加密算法安全编码组件.</li>
+<li><code>CertificateCoder</code> - X.509证书组件.</li>
+</ul>
+@since 1.1
+</body>
+</html>

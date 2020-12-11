@@ -8,7 +8,7 @@ import com.google.common.collect.Maps;
 import com.mesalab.calcite.storage.DataTypeMapping;
 import com.mesalab.calcite.storage.Storage;
 import com.mesalab.common.exception.BusinessException;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.zdjizhi.utils.StringUtil.setDefaultIfEmpty;
+import static com.mesalab.tool.utils.StringUtil.setDefaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @Slf4j

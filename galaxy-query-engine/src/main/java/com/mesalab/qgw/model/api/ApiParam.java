@@ -1,6 +1,6 @@
 package com.mesalab.qgw.model.api;
 
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

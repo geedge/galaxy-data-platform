@@ -1,6 +1,6 @@
 package com.mesalab.common.utils;
 
-import com.zdjizhi.utils.IpLookup;
+import com.mesalab.tool.utils.IpLookup;
 
 import javax.servlet.http.HttpServletRequest;
 

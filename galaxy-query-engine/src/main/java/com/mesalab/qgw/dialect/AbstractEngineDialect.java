@@ -2,7 +2,7 @@ package com.mesalab.qgw.dialect;
 
 import com.mesalab.common.base.BaseResult;
 import com.mesalab.qgw.model.api.ApiParam;
-import com.zdjizhi.utils.StringUtil;
+import com.mesalab.tool.utils.StringUtil;
 import lombok.Data;
 
 import java.util.Optional;
